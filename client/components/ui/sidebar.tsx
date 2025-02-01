@@ -3,6 +3,8 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, Check } from "lucide-react"
+import Link from "next/link";
+
 
 export default function Sidebar({
   tasks,
@@ -55,9 +57,11 @@ export default function Sidebar({
       </ScrollArea>
 
       <div className="p-4 border-t">
+        <Link href="/addtask">
         <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white h-11 rounded-lg transition-colors">
           Add a task
         </Button>
+        </Link>
       </div>
     </div>
   )
