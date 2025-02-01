@@ -5,7 +5,7 @@ import logger from "./config/logger";
 import dotenv from "dotenv";
 dotenv.config();
 
-const PORT = process.env.MONGO_PORT || 3151;
+const serverPORT = process.env.SERVER_PORT || 9000;
 
 const app = express();
 
@@ -23,3 +23,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 connectMongoDB();
+
+app.listen(serverPORT, () => {
+  logger.info(`Server is running on http://localhost:${serverPORT}`);
+});
