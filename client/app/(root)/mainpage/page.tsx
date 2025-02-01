@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { HelpCircle, Link2, ArrowUp, Check } from "lucide-react"
 import Image from "next/image"
-import Sidebar from "./sidebar"
+import Sidebar from "../../../components/ui/sidebar"
 
 export default function TaskManager() {
   const [searchQuery, setSearchQuery] = useState("")
