@@ -1,11 +1,12 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
-import { ChevronDown, HelpCircle, Link2, Check, ArrowUp } from "lucide-react"
-import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { HelpCircle, Link2, ArrowUp, Check } from "lucide-react"
 import Image from "next/image"
+import Sidebar from "./sidebar"
 
 export default function TaskManager() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -24,39 +25,7 @@ export default function TaskManager() {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <div className="w-80 border-r bg-white flex flex-col">
-        <div className="p-4 pb-0">
-          <div className="mb-6">
-            <h1 className="text-xl font-semibold text-gray-800">Today's tasks</h1>
-            <p className="text-sm text-gray-500 mt-1">Saturday, 1 February - 12:12pm</p>
-          </div>
-
-          <div className="mb-4">
-            <button className="flex w-full items-center justify-between rounded-lg p-2.5 hover:bg-gray-50 transition-colors">
-              <span className="text-gray-700">Reviews</span>
-              <ChevronDown className="h-4 w-4 text-gray-500" />
-            </button>
-          </div>
-        </div>
-
-        <ScrollArea className="flex-1 px-4">
-          <div className="space-y-2 pb-4">
-            {tasks.map(task => (
-              <TaskItem
-                key={task.id}
-                {...task}
-                toggleCompletion={() => toggleTaskCompletion(task.id)}
-              />
-            ))}
-          </div>
-        </ScrollArea>
-
-        <div className="p-4 border-t">
-          <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white h-11 rounded-lg transition-colors">
-            Add a task
-          </Button>
-        </div>
-      </div>
+      <Sidebar tasks={tasks} toggleTaskCompletion={toggleTaskCompletion} />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
@@ -93,11 +62,26 @@ export default function TaskManager() {
             <ScrollArea className="h-[500px]">
               <div className="space-y-3">
                 {tasks.map(task => (
-                  <SearchResult
+                  <div
                     key={task.id}
-                    {...task}
-                    toggleCompletion={() => toggleTaskCompletion(task.id)}
-                  />
+                    className={`rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all ${task.completed ? 'opacity-75' : ''}`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <button
+                        onClick={() => toggleTaskCompletion(task.id)}
+                        className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors
+                          ${task.completed ? 'border-gray-900 bg-gray-900' : 'border-gray-300 hover:border-gray-400'}`}
+                      >
+                        {task.completed && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+                      </button>
+                      <div className="flex-1">
+                        <h3 className={`font-medium ${task.completed ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
+                          {task.title}
+                        </h3>
+                        <p className="text-gray-500 text-sm">{task.description}</p>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
             </ScrollArea>
@@ -111,52 +95,6 @@ export default function TaskManager() {
             <ArrowUp className="h-4 w-4 text-white" />
           </Button>
         </main>
-      </div>
-    </div>
-  )
-}
-
-function TaskItem({ title, description, completed, toggleCompletion }: 
-  { title: string, description: string, completed: boolean, toggleCompletion: () => void }) {
-  return (
-    <div className={`rounded-lg p-3 transition-all ${completed ? 'bg-gray-50 opacity-75' : 'bg-white'}`}>
-      <div className="flex items-start gap-3">
-        <button
-          onClick={toggleCompletion}
-          className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors
-            ${completed ? 'border-gray-900 bg-gray-900' : 'border-gray-300 hover:border-gray-400'}`}
-        >
-          {completed && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
-        </button>
-        <div className="flex-1">
-          <h3 className={`font-medium ${completed ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
-            {title}
-          </h3>
-          <p className="text-sm text-gray-500">{description}</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function SearchResult({ title, description, completed, toggleCompletion }: 
-  { title: string, description: string, completed: boolean, toggleCompletion: () => void }) {
-  return (
-    <div className={`rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all ${completed ? 'opacity-75' : ''}`}>
-      <div className="flex items-start gap-3">
-        <button
-          onClick={toggleCompletion}
-          className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors
-            ${completed ? 'border-gray-900 bg-gray-900' : 'border-gray-300 hover:border-gray-400'}`}
-        >
-          {completed && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
-        </button>
-        <div className="flex-1">
-          <h3 className={`font-medium ${completed ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
-            {title}
-          </h3>
-          <p className="text-gray-500 text-sm">{description}</p>
-        </div>
       </div>
     </div>
   )
