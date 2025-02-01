@@ -2,6 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon index.ts"
@@ -11,20 +12,32 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@xenova/transformers": "^2.17.2",
     "axios": "^1.7.5",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "mongodb": "^6.8.0",
-    "mongoose": "^8.5.2",
+    "mongoose": "^8.9.6",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.10.0",
     "nodemon": "^3.1.4",
-    "pino": "^9.6.0"
+    "pino": "^9.6.0",
+    "protobufjs": "^7.4.0",
+    "uuid": "^11.0.5",
+    "weaviate-client": "^3.3.6",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/mongoose": "^5.11.96",
-    "@types/node": "^22.2.0",
-    "typescript": "^5.5.4"
+    "@types/node": "^22.13.0",
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^6.4.17",
+    "pino-pretty": "^13.0.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   }
 }

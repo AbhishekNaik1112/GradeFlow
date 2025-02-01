@@ -1,29 +1,50 @@
-import express, { Request, Response } from "express";
-import connectMongoDB from "./config/nosql-config";
-import cors from "cors";
-import logger from "./config/logger";
+import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+import connectDB from "./config/nosql-config";
+import logger from "./config/logger";
+import documentRouter from "./routes/documentRoutes";
+
 dotenv.config();
 
-const serverPORT = process.env.SERVER_PORT || 9000;
-
 const app = express();
+const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  }),
-);
+app.use(cors()); // Enable CORS for cross-origin requests
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
+// Request logging
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
 });
 
-connectMongoDB();
-
-app.listen(serverPORT, () => {
-  logger.info(`Server is running on http://localhost:${serverPORT}`);
+// Health check route
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Server is running!" });
 });
+
+// API routes
+app.use("/api", documentRouter);
+
+// Error handling middleware
+app.use((err: any, req: any, res: any, next: any) => {
+  logger.error(err.message);
+  res.status(500).json({ error: "Internal Server Error" });
+});
+
+// Start the server
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      logger.info(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    logger.error("Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();

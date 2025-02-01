@@ -1,4 +1,11 @@
 import pino from "pino";
-const level = process.env.NODE_ENV === "production" ? "error" : "debug";
-const logger = pino({ level });
+
+const logger = pino({
+  level: "info",
+  transport: {
+    target: "pino-pretty",
+    options: { colorize: true },
+  },
+});
+
 export default logger;

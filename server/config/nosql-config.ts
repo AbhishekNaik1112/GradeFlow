@@ -1,18 +1,18 @@
-import { config } from "dotenv";
-import mongoose from "mongoose";
-import logger from "../config/logger";
+import mongoose from 'mongoose';
+import logger from './logger';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-config();
+const MONGODB_URI = process.env.MONGO_URI as string;
 
-const MONGODB_URI: string = process.env.MONGO_URI as string;
-
-const MongoDB = async (): Promise<void> => {
+const connectDB = async () => {
   try {
-    await mongoose.connect(MONGODB_URI);
-    logger.info(" MongoDB Database connected successfully");
+    await mongoose.connect(MONGODB_URI as string);
+    logger.info('MongoDB connected successfully.');
   } catch (error) {
-    logger.error("Error connecting to the database:", error);
+    logger.error('MongoDB connection error:', error);
+    process.exit(1);
   }
 };
 
-export default MongoDB;
+export default connectDB;
