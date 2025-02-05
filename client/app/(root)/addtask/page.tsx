@@ -1,15 +1,15 @@
-"use client"
+'use client'
 
+import AddTask from '@/components/ui/addTask-form'
+import { Button } from '@/components/ui/button'
+import Sidebar from '@/components/ui/sidebar'
+import { HelpCircle, Link2 } from 'lucide-react'
+import Image from 'next/image'
+import React from 'react'
 import { useState } from "react"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { HelpCircle, Link2, ArrowUp, Check } from "lucide-react"
-import Image from "next/image"
-import Sidebar from "../../../components/ui/sidebar"
 
-export default function TaskManager() {
-  const [searchQuery, setSearchQuery] = useState("")
+
+const page = () => {
   const [tasks, setTasks] = useState([
     { id: 1, title: "Human resource documentations", description: "Organize and update HR policies, employee records, and compliance documents.", completed: false },
     { id: 2, title: "HR excel sheet analytics", description: "Analyze HR data using Excel, focusing on employee performance, attendance, and recruitment trends.", completed: true },
@@ -17,18 +17,20 @@ export default function TaskManager() {
   ])
 
   const toggleTaskCompletion = (taskId: number) => {
-    setTasks(tasks.map(task => 
+    setTasks(tasks.map(task =>
       task.id === taskId ? { ...task, completed: !task.completed } : task
     ))
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+
+
+    <div className="flex h-screen">
       {/* Sidebar */}
       <Sidebar tasks={tasks} toggleTaskCompletion={toggleTaskCompletion} />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="h-screen bg-gray-50 w-3/4">
         <nav className="flex items-center justify-between border-b p-4 bg-white">
           <Image
             src="/logo.svg"
@@ -47,7 +49,22 @@ export default function TaskManager() {
           </div>
         </nav>
 
+        <AddTask/>
       </div>
+
     </div>
+
+
+
+    // </div>
+
+
+
+
+
   )
+
 }
+
+export default page
+
