@@ -70,7 +70,7 @@ export default function Page() {
         </div>
 
         {/* CTA Button */}
-        <Link href="/mainpage">
+        <Link href="/userdetails">
         <Button 
           className="mt-12 bg-[#06435C] px-8 py-6 text-lg hover:bg-[#053447] transition-transform duration-300 hover:scale-105"
           size="lg"
