@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 
-
 export const metadata: Metadata = {
   title: "GradeFlow",
   description: "Meetings on the go",
   icons: {
-    icon: '/icons/ovid-header.svg',
+    icon: "/icons/ovid-header.svg",
   },
 };
-
 
 export default function RootLayout({
   children,
@@ -16,10 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-        <body >
-          {children}
-        </body>
-      </html>
+    <html lang="en">
+      <body>
+            {children}
+      </body>
+    </html>
   );
 }
