@@ -4,9 +4,7 @@ import { useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { HelpCircle, Link2, ArrowUp, Check } from "lucide-react"
-import Image from "next/image"
-import Sidebar from "../../../components/ui/sidebar"
+import { HelpCircle, Link2, ArrowUp, Check, X } from "lucide-react"
 
 export default function TaskManager() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -16,48 +14,30 @@ export default function TaskManager() {
     { id: 3, title: "Performance Appraisal Analysis", description: "Review and document employee performance evaluations for HR insights.", completed: false }
   ])
 
-  const toggleTaskCompletion = (taskId: number) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, completed: !task.completed } : task
-    ))
-  }
-
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <Sidebar tasks={tasks} toggleTaskCompletion={toggleTaskCompletion} />
-
+    <div className="h-screen bg-gray-50">
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        <nav className="flex items-center justify-between border-b p-4 bg-white">
-          <Image
-            src="/logo.svg"
-            alt="Logo"
-            width={32}
-            height={32}
-            className="h-8 w-8"
-          />
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" className="text-gray-600 hover:bg-gray-50 gap-1.5">
-              Help <HelpCircle className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" className="text-gray-600 hover:bg-gray-50 gap-1.5">
-              Docs <Link2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </nav>
 
         <main className="flex-1 p-6 bg-gray-50">
           <div className="max-w-3xl mx-auto">
             <h2 className="mb-6 text-2xl font-bold text-gray-900">Find what you're looking for!</h2>
 
-            <Input
-              type="search"
-              placeholder="Search your tasks..."
-              className="mb-6 bg-white rounded-lg h-12 shadow-sm"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+            <div className="relative">
+      <Input
+        placeholder="Search your tasks..."
+        className="mb-6 bg-white rounded-full h-12 p-5 shadow-sm pr-12 appearance-none"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+
+      {searchQuery && (
+        <X
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500 cursor-pointer"
+          onClick={() => setSearchQuery("")}
+        />
+      )}
+    </div>
 
             <ScrollArea className="h-[500px]">
               <div className="space-y-3">

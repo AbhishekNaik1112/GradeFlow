@@ -6,6 +6,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import Image from "next/image"
+import { HelpCircle, Link2 } from "lucide-react"
 
 const formSchema = z.object({
   fullname: z.string().min(2, {
@@ -34,13 +36,23 @@ export default function SignupForm() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="flex items-center justify-between p-4 md:p-6">
-        <img src="logo.svg" alt="GradeFlow Logo" className="h-8 w-8" />
-        <div className="flex gap-4">
-          <a href="#" className="text-gray-600 hover:text-gray-900">Help</a>
-          <a href="#" className="text-gray-600 hover:text-gray-900">Docs</a>
-        </div>
-      </nav>
+      <nav className="flex items-center justify-between border-b p-4 bg-white">
+              <Image
+                src="/logo.svg"
+                alt="Logo"
+                width={32}
+                height={32}
+                className="h-8 w-8"
+              />
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" className="text-gray-600 hover:bg-gray-50 gap-1.5">
+                  Help <HelpCircle className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" className="text-gray-600 hover:bg-gray-50 gap-1.5">
+                  Docs <Link2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </nav>
 
       {/* Main Content */}
       <main className="container mx-auto flex min-h-[calc(100vh-80px)] flex-col items-center px-4 py-16">
