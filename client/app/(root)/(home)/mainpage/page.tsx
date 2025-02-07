@@ -6,7 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowUp, Check, X } from "lucide-react";
 
+import * as React from "react"
+const tags = Array.from({ length: 50 }).map(
+  (_, i, a) => `v1.2.0-beta.${a.length - i}`
+)
+// import {ScrollArea} from "@/components/ui/scroll-area"
+// import {Separator} from "@/components/ui/separator"
 export default function TaskManager() {
+
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllTasks, setShowAllTasks] = useState(false);
   const [tasks, setTasks] = useState([
@@ -15,12 +22,12 @@ export default function TaskManager() {
     { id: 3, title: "Performance Appraisal Analysis", description: "Review and document employee performance evaluations for HR insights.", completed: false },
     { id: 4, title: "Recruitment Strategy Review", description: "Analyze past recruitment efforts and suggest improvements.", completed: false },
     { id: 5, title: "Employee Satisfaction Survey", description: "Design and distribute employee satisfaction surveys.", completed: false },
-    // { id: 6, title: "Workplace Safety Compliance", description: "Ensure that the workplace adheres to safety regulations.", completed: false },
-    // { id: 7, title: "Training Program Development", description: "Develop training programs for employee upskilling.", completed: false },
-    // { id: 8, title: "Onboarding Process Optimization", description: "Improve onboarding experience for new hires.", completed: false },
-    // { id: 9, title: "HR Policy Updates", description: "Review and update outdated HR policies.", completed: false },
-    // { id: 10, title: "Employee Exit Interviews", description: "Conduct and document exit interviews.", completed: false },
-    // { id: 11, title: "Diversity and Inclusion Strategy", description: "Evaluate diversity efforts and propose new initiatives.", completed: false }
+    { id: 6, title: "Workplace Safety Compliance", description: "Ensure that the workplace adheres to safety regulations.", completed: false },
+    { id: 7, title: "Training Program Development", description: "Develop training programs for employee upskilling.", completed: false },
+    { id: 8, title: "Onboarding Process Optimization", description: "Improve onboarding experience for new hires.", completed: false },
+    { id: 9, title: "HR Policy Updates", description: "Review and update outdated HR policies.", completed: false },
+    { id: 10, title: "Employee Exit Interviews", description: "Conduct and document exit interviews.", completed: false },
+    { id: 11, title: "Diversity and Inclusion Strategy", description: "Evaluate diversity efforts and propose new initiatives.", completed: false }
   ]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -33,37 +40,36 @@ export default function TaskManager() {
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col">
-      <main className="flex-1 p-6 bg-gray-50 flex flex-col">
+      <main className="flex-1 p-6 bg-white flex flex-col h-[40%]">
 
         <div className="max-w-3xl mx-auto flex-1 flex flex-col">
-          <h2 className="mb-6 text-2xl font-bold text-gray-900">Find what you're looking for!</h2>
+          <h2 className="mb-6 text-3xl font-semibold text-gray-900 text-center">Find what you're looking for!</h2>
 
           {/* Search Bar */}
           <div className="relative">
             <Input
               placeholder="Search your tasks..."
-              className="mb-6 bg-white rounded-full h-12 p-5 shadow-sm pr-12 appearance-none"
+              className="mb-6 bg-white rounded-full h-12 p-6 pr-12 appearance-none shadow-none border"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
               <X
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500 cursor-pointer"
+                className="absolute right-5 top-6 transform -translate-y-1/2 h-5 w-5 text-gray-500 cursor-pointer"
                 onClick={() => setSearchQuery("")}
               />
             )}
           </div>
 
           {/* Scrollable Task List */}
-          <ScrollArea ref={scrollContainerRef} className="flex-1">
+          <ScrollArea ref={scrollContainerRef} className="h-[45%] w-full">
 
             <div className="space-y-3">
               {tasks.slice(0, showAllTasks ? tasks.length : 10).map((task) => (
                 <div
                   key={task.id}
-                  className={`rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all ${
-                    task.completed ? "opacity-75" : ""
-                  }`}
+                  className={`rounded-lg p-4 bg-white hover:opacity-70 cursor-pointer transition-all ${task.completed ? "opacity-75 border border-white" : "border"
+                    }`}
                 >
                   <div className="flex items-start gap-3">
                     <button
@@ -90,25 +96,26 @@ export default function TaskManager() {
               ))}
             </div>
 
-            {/* Show More Results Button */}
-            {!showAllTasks && tasks.length > 10 && (
-              <div className="py-4 flex justify-center">
-                <Button variant="ghost" className="text-gray-600 hover:bg-gray-100" onClick={() => setShowAllTasks(true)}>
-                  Show more results
-                </Button>
-              </div>
-            )}
           </ScrollArea>
+
+          {/* Show More Results Button */}
+          {!showAllTasks && tasks.length > 10 && (
+            <div className="py-4 flex justify-center">
+              <Button variant="ghost" className="text-gray-500 hover:bg-gray-100" onClick={() => setShowAllTasks(true)}>
+                Show more results
+              </Button>
+            </div>
+          )}
         </div>
-      </main>
+      </main >
 
       {/* Scroll to Top Button */}
-      <Button
+      < Button
         className="fixed bottom-6 right-6 rounded-full bg-gray-900 hover:bg-gray-800 h-12 w-12 shadow-lg transition-transform hover:scale-105"
         onClick={scrollToTop}
       >
         <ArrowUp className="h-4 w-4 text-white" />
-      </Button>
-    </div>
+      </Button >
+    </div >
   );
 }
