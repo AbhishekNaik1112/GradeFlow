@@ -14,7 +14,8 @@ export default function Sidebar({
   toggleTaskCompletion: (taskId: number) => void
 }) {
   return (
-    <div className="w-1/4 border-r bg-white flex flex-col">
+    <div className="w-1/4 h-screen border-r bg-white flex flex-col">
+
       <div className="p-4 pb-0">
         <div className="mb-6">
           <h1 className="text-xl font-semibold text-gray-800">Today's tasks</h1>
@@ -30,6 +31,7 @@ export default function Sidebar({
       </div>
 
       <ScrollArea className="flex-1 px-4">
+
         <div className="space-y-2 pb-4">
           {tasks.map(task => (
             <div
