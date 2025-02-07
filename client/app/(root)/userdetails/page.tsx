@@ -8,30 +8,37 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { HelpCircle, Link2 } from "lucide-react"
+import { useRouter } from "next/navigation"; 
+
 
 const formSchema = z.object({
   fullname: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  email: z.string().email({
+  userEmail: z.string().email({
     message: "Please enter a valid email address.",
   }),
 })
 
 export default function SignupForm() {
   const [users, setUsers] = useState([])
-
+  const router = useRouter();
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullname: "",
-      email: "",
+      userEmail: "",
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setUsers(values)
-    console.log("Stored Users:", [values]);  }
+    console.log("Stored Users:", [values.userEmail]);  
+    localStorage.setItem("userEmail",values.userEmail );
+    router.push("/mainpage");
+
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -78,7 +85,7 @@ export default function SignupForm() {
 
               <FormField
                 control={form.control}
-                name="email"
+                name="userEmail"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
