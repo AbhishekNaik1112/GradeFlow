@@ -1,25 +1,23 @@
-import mongoose, { Schema, Document as MongooseDocument } from 'mongoose';
+import mongoose, { Schema, Document as MongooseDocument } from "mongoose";
 
-export type DocumentType = 'assignment' | 'material';
-
-export interface Document {
-  id: string;
+export interface Task {
   title: string;
   content: string;
-  type: DocumentType;
   deadline?: string;
+  type: string;
+  userEmail: string;
   embedding: number[];
 }
 
-const documentSchema = new Schema<Document>({
-  id: { type: String, required: true },
+const taskSchema = new Schema<Task>({
   title: { type: String, required: true },
   content: { type: String, required: true },
-  type: { type: String, enum: ['assignment', 'material'], required: true },
   deadline: { type: String, default: null },
+  type: { type: String, enum: ["assignment", "material"], required: true },
+  userEmail: { type: String, required: true },
   embedding: { type: [Number], required: true },
 });
 
-const DocumentModel = mongoose.model<Document>('Document', documentSchema);
+const DocumentModel = mongoose.model<Task>("tasks", taskSchema);
 
 export { DocumentModel };
