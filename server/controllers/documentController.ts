@@ -2,12 +2,11 @@ import { Request, Response } from "express";
 import { DocumentModel } from "../models/documents";
 import { embedText } from "../utils/embeddings";
 import { cosineSimilarity } from "../utils/same";
-import { v4 as uuidv4 } from "uuid";
 
 export async function addDocuments(req: Request, res: Response): Promise<void> {
   try {
-    const { title, content, type, date, deadline } = req.body;
-    if (!title || !content || !type || !date) {
+    const { title, content, deadline, type, userEmail } = req.body;
+    if (!title || !content || !deadline || !userEmail || !type) {
       res
         .status(400)
         .json({ error: "title, content, type, and date are required." });
@@ -16,11 +15,11 @@ export async function addDocuments(req: Request, res: Response): Promise<void> {
     const embedding = await embedText(`${title} ${content}`);
 
     const newDoc = new DocumentModel({
-      id: uuidv4(),
       title,
       content,
-      type,
       deadline: deadline || null,
+      userEmail,
+      type,
       embedding,
     });
 
