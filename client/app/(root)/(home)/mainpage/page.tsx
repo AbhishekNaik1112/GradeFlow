@@ -16,7 +16,6 @@ export default function TaskManager() {
 
   return (
     <div className="h-screen bg-gray-50">
-      {/* Main Content */}
       <div className="flex-1 flex flex-col">
 
         <main className="flex-1 p-6 bg-gray-50">

@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <div className="flex h-screen bg-gray-50">
-          {/* Sidebar */}
+
           <Sidebar
             tasks={[
               {
@@ -50,7 +50,6 @@ export default function RootLayout({
             ]}
           />
 
-          {/* Main Content */}
           <div className="flex-1 flex flex-col">
             <Navbar />
 

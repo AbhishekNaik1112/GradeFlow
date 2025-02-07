@@ -22,7 +22,6 @@ export default function TaskCard({
   status = "Incomplete",
   description = "Organize and update HR policies, employee records, and compliance documents. Organize and schedule employee training programs based on skill gaps and company needs.\n\nCompile data and insights on diversity and inclusion in recent recruitment efforts.",
 }: TaskCardProps) {
-  // State to track task completion
   const [isCompleted, setIsCompleted] = useState(status === "Complete");
 
   return (
@@ -31,7 +30,6 @@ export default function TaskCard({
         <div className="space-y-4">
           <div className="text-sm text-muted-foreground">Date created: {createdDate}</div>
 
-          {/* Checkbox and Title */}
           <div className="flex items-center gap-2">
             <div className="checkbox-wrapper-12">
               <div className="cbx">
@@ -39,7 +37,7 @@ export default function TaskCard({
                   type="checkbox"
                   id="cbx-12"
                   checked={isCompleted}
-                  onChange={() => setIsCompleted(!isCompleted)} // Toggle state
+                  onChange={() => setIsCompleted(!isCompleted)} 
                 />
                 <label htmlFor="cbx-12"></label>
                 <svg fill="none" viewBox="0 0 15 14" height="14" width="15">
@@ -59,13 +57,11 @@ export default function TaskCard({
             <h1 className="text-3xl font-semibold">{title}</h1>
           </div>
 
-          {/* Task Details */}
           <div className="flex flex-wrap gap-2 items-center">
             <Badge variant="secondary" className="text-sm font-normal bg-zinc-900 text-white hover:bg-zinc-900 px-2 py-1">
               {type}
             </Badge>
 
-            {/* Status Badge - Dynamic */}
             <Badge
               variant={isCompleted ? "secondary" : "destructive"}
               className={`text-sm font-normal flex items-center gap-1 px-2 py-1 ${isCompleted ? "bg-green-500 text-white" : "bg-red-500"}`}

@@ -35,7 +35,7 @@ export default function SignupForm() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
+
       <nav className="flex items-center justify-between border-b p-4 bg-white">
               <Image
                 src="/logo.svg"
@@ -54,7 +54,6 @@ export default function SignupForm() {
               </div>
             </nav>
 
-      {/* Main Content */}
       <main className="container mx-auto flex min-h-[calc(100vh-80px)] flex-col items-center px-4 py-16">
         <h1 className="mb-4 text-5xl font-bold tracking-tight text-[#06435C] md:text-6xl">GradeFlow</h1>
         <p className="mb-16 text-xl text-gray-600">Smarter Studying, Powered by AI!</p>

@@ -8,10 +8,8 @@ import React from "react";
 export default function Page() {
   return (
     <div className="h-screen bg-white flex flex-col overflow-hidden">
-      {/* Navigation */}
       <NavBar />
 
-      {/* Hero Section */}
       <main className="flex-1 container mx-auto px-4 py-8 md:py-12 lg:py-16 text-center flex flex-col items-center justify-center">
         <div className="max-w-4xl mx-auto">
           <h1 className="mb-4 text-4xl font-bold tracking-tight text-[#06435C] md:text-5xl lg:text-6xl transition-all duration-300 hover:scale-105">
@@ -22,7 +20,6 @@ export default function Page() {
           </p>
         </div>
 
-        {/* Feature Cards */}
         <div className="w-full max-w-6xl mx-auto grid gap-6 md:grid-cols-2 lg:grid-cols-3 px-4">
           {[
             { icon: Star, title: "Smart Categorized To-Do List" },
@@ -43,7 +40,7 @@ export default function Page() {
                 <p className="text-center text-gray-600">
                   {index === 0 && "Organize tasks into categories like 'Assignments,' 'Exams,' or 'Projects'"}
                   {index === 1 && "Intelligent search to find any task instantly from hundreds of items"}
-                  {index === 2 && "Get AI-generated reminders to improve your study habits"}
+                  {index === 2 && "Easily set reminders and deadlines to manage your studies effectively."}
                 </p>
                 <p className="text-sm text-gray-500 mt-2">
                   {index === 0 && "Track progress and stay on top of deadlines"}
@@ -55,7 +52,6 @@ export default function Page() {
           ))}
         </div>
 
-        {/* CTA Button */}
         <Link href="/userdetails">
           <Button
             className="mt-12 bg-[#06435C] px-8 py-6 text-lg hover:bg-[#053447] transition-transform duration-300 hover:scale-105"
