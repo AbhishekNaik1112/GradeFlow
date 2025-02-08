@@ -3,10 +3,7 @@ import { DocumentModel } from "../models/documents";
 import { embedText } from "../utils/embeddings";
 import { cosineSimilarity } from "../utils/same";
 
-export async function getTaskById(
-  req: Request,
-  res: Response
-): Promise<void> {
+export async function getTaskById(req: Request, res: Response): Promise<void> {
   try {
     const { id } = req.params;
     const doc = await DocumentModel.findById(id);
@@ -20,7 +17,6 @@ export async function getTaskById(
     res.status(500).json({ error: "Internal server error" });
   }
 }
-
 
 export async function addDocument(req: Request, res: Response): Promise<void> {
   try {
@@ -186,14 +182,9 @@ export async function searchDocumentsbyID(
       return;
     }
 
-    const dateObj = new Date(date as string);
-    if (isNaN(dateObj.getTime())) {
-      res.status(400).json({ error: "Invalid date format." });
-      return;
-    }
-
-    const startOfDay = new Date(dateObj.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(dateObj.setHours(23, 59, 59, 999));
+    const dateString = date as string;
+    const startOfDay = new Date(dateString + "T00:00:00Z");
+    const endOfDay = new Date(dateString + "T23:59:59Z");
 
     const documents = await DocumentModel.find({
       userEmail: email,
@@ -208,5 +199,3 @@ export async function searchDocumentsbyID(
     res.status(500).json({ error: "Internal server error" });
   }
 }
-
-
