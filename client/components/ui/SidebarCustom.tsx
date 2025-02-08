@@ -5,15 +5,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
+import { useTasks } from "@/app/(root)/(home)/taskcontext"
 
-export default function Sidebar({
-  tasks: initialTasks,
-}: {
-  tasks: any[];
-}) {
+export default function Sidebar() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [tasks, setTasks] = useState(initialTasks);
+  const { tasks, setTasks, updateTaskStatus } = useTasks();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -23,22 +20,65 @@ export default function Sidebar({
     return () => clearInterval(interval);
   }, []);
 
-  // Toggle task completion status
-  const toggleTaskCompletion = (taskId: number) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.id === taskId
-          ? { ...task, completed: !task.completed }
-          : task
-      )
-    );
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const user = localStorage.getItem("userEmail");
+        if (!user) return;
+
+        const response = await fetch("https://gradeflow.onrender.com/api/gettasks");
+        if (!response.ok) throw new Error("Failed to fetch tasks");
+
+        const data = await response.json();
+        if (data && Array.isArray(data.documents)) {
+          const today = new Date().toISOString().split("T")[0];
+
+          const userTasks = data.documents
+            .filter((task) => task.userEmail === user && task.deadline?.startsWith(today))
+            .map((task) => ({
+              ...task,
+              completed: task.status === "complete",
+            }));
+
+          setTasks(userTasks);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+        setTasks([]);
+      }
+    };
+
+    fetchTasks();
+  }, [setTasks]);
+
+  const toggleTaskCompletion = async (taskId: string, currentStatus: boolean) => {
+    const newStatus = !currentStatus;
+    updateTaskStatus(taskId, newStatus);
+
+    try {
+      const response = await fetch(`https://gradeflow.onrender.com/api/updatetasks/${taskId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: newStatus ? "complete" : "incomplete",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error updating task:", error);
+      updateTaskStatus(taskId, currentStatus); // Revert on error
+    }
   };
 
-  // Filter tasks based on category
   const filteredTasks =
     selectedCategory === "All"
       ? tasks
-      : tasks.filter(task => task.category === selectedCategory);
+      : tasks.filter((task) => task.type === selectedCategory);
 
   return (
     <div className="w-1/4 h-screen border-r bg-gray-50 flex flex-col">
@@ -59,8 +99,8 @@ export default function Sidebar({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All</SelectItem>
-              <SelectItem value="Material">Material</SelectItem>
-              <SelectItem value="Assignments">Assignments</SelectItem>
+              <SelectItem value="material">Material</SelectItem>
+              <SelectItem value="assignment">Assignments</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -68,41 +108,32 @@ export default function Sidebar({
 
       <ScrollArea className="flex-1 px-4">
         <div className="space-y-2 pb-4">
-          {filteredTasks.map(task => (
+          {filteredTasks.map((task) => (
             <div
-              key={task.id}
-              className={`rounded-lg p-3 border transition-all ${task.completed ? 'bg-gray-50 opacity-75 border-white' : 'bg-white '}`}
+              key={task._id}
+              className={`rounded-lg p-3 border transition-all ${task.completed ? "bg-gray-50 opacity-75 border-white" : "bg-white"}`}
             >
               <div className="flex items-start gap-3">
                 <div className="checkbox-wrapper-12 scale-90">
                   <div className="cbx">
                     <input
                       type="checkbox"
-                      id={`cbx-${task.id}`}
+                      id={`cbx-${task._id}`}
                       checked={task.completed}
-                      onChange={() => toggleTaskCompletion(task.id)}
+                      onChange={() => toggleTaskCompletion(task._id, task.completed)}
                     />
-                    <label htmlFor={`cbx-${task.id}`}></label>
+                    <label htmlFor={`cbx-${task._id}`}></label>
                     <svg fill="none" viewBox="0 0 15 14" height="14" width="15">
                       <path d="M2 8.36364L6.23077 12L13 2"></path>
                     </svg>
                   </div>
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <filter id="goo-12">
-                        <feGaussianBlur result="blur" stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
-                        <feColorMatrix result="goo-12" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" mode="matrix" in="blur"></feColorMatrix>
-                        <feBlend in2="goo-12" in="SourceGraphic"></feBlend>
-                      </filter>
-                    </defs>
-                  </svg>
                 </div>
 
                 <div className="flex-1">
-                  <h3 className={`font-medium ${task.completed ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
+                  <h3 className={`font-medium ${task.completed ? "text-gray-500 line-through" : "text-gray-900"}`}>
                     {task.title}
                   </h3>
-                  <p className="text-sm text-gray-500">{task.description}</p>
+                  <p className="text-sm text-gray-500">{task.description || task.content}</p>
                 </div>
               </div>
             </div>
