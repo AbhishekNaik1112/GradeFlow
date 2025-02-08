@@ -1,18 +1,16 @@
 import { Request, Response } from "express";
 import { DocumentModel } from "../models/documents";
-import { embedText, embedTexts } from "../utils/embeddings";
+import { embedText } from "../utils/embeddings";
 import { cosineSimilarity } from "../utils/same";
 
 export async function addDocuments(req: Request, res: Response): Promise<void> {
   try {
     const { title, content, deadline, type, userEmail, status } = req.body;
     if (!title || !content || !deadline || !userEmail || !type || !status) {
-      res
-        .status(400)
-        .json({
-          error:
-            "title, content, type, deadline, userEmail, and status are required.",
-        });
+      res.status(400).json({
+        error:
+          "title, content, type, deadline, userEmail, and status are required.",
+      });
       return;
     }
     const embedding = await embedText(`${title} ${content}`);
@@ -28,48 +26,9 @@ export async function addDocuments(req: Request, res: Response): Promise<void> {
     await newDoc.save();
     res
       .status(201)
-      .json({ message: "Document added successfully", document: newDoc});
+      .json({ message: "Document added successfully", document: newDoc });
   } catch (error) {
     console.error("Error in addDocuments:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-}
-
-export async function addDocumentsBulk(
-  req: Request,
-  res: Response
-): Promise<void> {
-  try {
-    const documents = req.body;
-    if (!Array.isArray(documents) || documents.length === 0) {
-      res
-        .status(400)
-        .json({ error: "A non-empty array of documents is required." });
-      return;
-    }
-    const texts = documents.map((doc) => `${doc.title} ${doc.content}`);
-    const embeddings = await embedTexts(texts);
-    const docsToSave = documents.map(
-      (doc, i) =>
-        new DocumentModel({
-          title: doc.title,
-          content: doc.content,
-          deadline: doc.deadline || null,
-          userEmail: doc.userEmail,
-          status: doc.status,
-          type: doc.type,
-          embedding: embeddings[i],
-        })
-    );
-    await Promise.all(docsToSave.map((doc) => doc.save()));
-    res
-      .status(201)
-      .json({
-        message: "Bulk documents added successfully",
-        count: docsToSave.length,
-      });
-  } catch (error) {
-    console.error("Error in addDocumentsBulk:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 }
