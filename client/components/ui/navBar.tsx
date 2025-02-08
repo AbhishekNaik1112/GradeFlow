@@ -20,9 +20,13 @@ const Navbar = () => {
         </Link>
 
         <div className="flex items-center gap-2">
+        <Link href="/help">
+
           <Button variant="ghost" className="text-gray-600 hover:bg-gray-50 gap-1.5">
-            Help <HelpCircle className="h-4 w-4" />
+            FAQ <HelpCircle className="h-4 w-4" />
           </Button>
+          </Link>
+
           <Button variant="ghost" className="text-gray-600 hover:bg-gray-50 gap-1.5">
             Docs <Link2 className="h-4 w-4" />
           </Button>

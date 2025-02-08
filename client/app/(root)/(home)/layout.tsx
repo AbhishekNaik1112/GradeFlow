@@ -1,5 +1,3 @@
-// "use client";
-
 import type { Metadata } from "next";
 import Sidebar from "@/components/ui/SidebarCustom";
 import Navbar from "@/components/ui/navBar";
