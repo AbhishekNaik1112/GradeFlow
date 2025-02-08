@@ -4,6 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, Check } from "lucide-react"
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 
 export default function Sidebar({
@@ -13,13 +14,28 @@ export default function Sidebar({
   tasks: any[]
   toggleTaskCompletion: (taskId: number) => void
 }) {
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="w-1/4 border-r bg-white flex flex-col">
-      <div className="p-4 pb-0">
+    <div className="w-1/4 h-screen border-r bg-gray-50 flex flex-col">
+
+      <div className="p-8 pb-0">
         <div className="mb-6">
-          <h1 className="text-xl font-semibold text-gray-800">Today's tasks</h1>
-          <p className="text-sm text-gray-500 mt-1">Saturday, 1 February - 12:12pm</p>
-        </div>
+          <h1 className="text-2xl font-semibold text-gray-800">Today's tasks</h1>
+          <p className="text-sm font-extralight text-gray-400 mt-1">
+            {currentTime.toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" })} -{" "}
+            {currentTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+          </p>        
+          </div>
 
         <div className="mb-4">
           <button className="flex w-full items-center justify-between rounded-lg p-2.5 hover:bg-gray-50 transition-colors">
@@ -30,6 +46,7 @@ export default function Sidebar({
       </div>
 
       <ScrollArea className="flex-1 px-4">
+
         <div className="space-y-2 pb-4">
           {tasks.map(task => (
             <div
