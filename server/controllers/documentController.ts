@@ -154,3 +154,38 @@ export async function getDocuments(req: Request, res: Response): Promise<void> {
     res.status(500).json({ error: "Internal server error" });
   }
 }
+
+export async function searchDocumentsbyID(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { email, date } = req.query;
+
+    if (!email || !date) {
+      res.status(400).json({ error: "Email and date are required." });
+      return;
+    }
+
+    const dateObj = new Date(date as string);
+    if (isNaN(dateObj.getTime())) {
+      res.status(400).json({ error: "Invalid date format." });
+      return;
+    }
+
+    const startOfDay = new Date(dateObj.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(dateObj.setHours(23, 59, 59, 999));
+
+    const documents = await DocumentModel.find({
+      userEmail: email,
+      deadline: { $gte: startOfDay, $lt: endOfDay },
+    });
+
+    const result = documents.map((doc) => ({ userEmail: doc.userEmail }));
+
+    res.json({ results: result });
+  } catch (error) {
+    console.error("Error in searchDocuments:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
