@@ -11,7 +11,7 @@ const router = Router();
 
 router.post("/addtasks", addDocument);
 router.put("/updatetasks/:id", updateDocument);
-router.delete("/deletetasks", deleteDocument);
+router.delete("/deletetasks/:id", deleteDocument);
 router.post("/searchtasks", searchDocuments);
 router.get("/gettasks", getDocuments);
 
