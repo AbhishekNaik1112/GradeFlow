@@ -1,36 +1,89 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowUp, Check, X } from "lucide-react";
 
-import * as React from "react"
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
-
 export default function TaskManager() {
-  const [isCompleted, setIsCompleted] = useState(status === "Complete");
-
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllTasks, setShowAllTasks] = useState(false);
-  const [tasks, setTasks] = useState([
-    { id: 1, title: "Human resource documentations", description: "Organize and update HR policies, employee records, and compliance documents.", completed: false },
-    { id: 2, title: "HR excel sheet analytics", description: "Analyze HR data using Excel, focusing on employee performance, attendance, and recruitment trends.", completed: true },
-    { id: 3, title: "Performance Appraisal Analysis", description: "Review and document employee performance evaluations for HR insights.", completed: false },
-    { id: 4, title: "Recruitment Strategy Review", description: "Analyze past recruitment efforts and suggest improvements.", completed: false },
-    { id: 5, title: "Employee Satisfaction Survey", description: "Design and distribute employee satisfaction surveys.", completed: false },
-    { id: 6, title: "Workplace Safety Compliance", description: "Ensure that the workplace adheres to safety regulations.", completed: false },
-    { id: 7, title: "Training Program Development", description: "Develop training programs for employee upskilling.", completed: false },
-    { id: 8, title: "Onboarding Process Optimization", description: "Improve onboarding experience for new hires.", completed: false },
-    { id: 9, title: "HR Policy Updates", description: "Review and update outdated HR policies.", completed: false },
-    { id: 10, title: "Employee Exit Interviews", description: "Conduct and document exit interviews.", completed: false },
-    { id: 11, title: "Diversity and Inclusion Strategy", description: "Evaluate diversity efforts and propose new initiatives.", completed: false }
-  ]);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("https://gradeflow.onrender.com/api/gettasks");
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("API Response:", data);
+
+        if (data && Array.isArray(data.documents)) {
+          const formattedTasks = data.documents.map(task => ({
+            ...task,
+            completed: task.status === "complete", 
+          }));
+          setTasks(formattedTasks);
+        } else {
+          console.error("Unexpected API response format:", data);
+          setTasks([]);
+        }
+      } catch (err: any) {
+        console.error("Fetch Error:", err);
+        setError(err.message);
+        setTasks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
+  const toggleTask = async (taskId: string, currentStatus: boolean) => {
+    setTasks(prevTasks =>
+      prevTasks.map(task =>
+        task._id === taskId ? { ...task, completed: !currentStatus } : task
+      )
+    );
+
+    try {
+      const response = await fetch(`https://gradeflow.onrender.com/api/updatetasks/${taskId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: !currentStatus ? "complete" : "incomplete",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error updating task:", error);
+
+      setTasks(prevTasks =>
+        prevTasks.map(task =>
+          task._id === taskId ? { ...task, completed: currentStatus } : task
+        )
+      );
+    }
+  };
+
+  const truncateText = (text: string, maxLength: number) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  };
 
   const scrollToTop = () => {
     if (scrollContainerRef.current) {
@@ -41,11 +94,11 @@ export default function TaskManager() {
   return (
     <div className="h-screen bg-gray-50 flex flex-col">
       <main className="flex-1 p-6 bg-white flex flex-col h-[40%]">
+        <div className="max-w-3xl mx-auto flex-1 flex flex-col w-[100%]">
+          <h2 className="mb-6 text-3xl font-semibold text-gray-900 text-center">
+            Find what you're looking for!
+          </h2>
 
-        <div className="max-w-3xl mx-auto flex-1 flex flex-col">
-          <h2 className="mb-6 text-3xl font-semibold text-gray-900 text-center">Find what you're looking for!</h2>
-
-          {/* Search Bar */}
           <div className="relative">
             <Input
               placeholder="Search your tasks..."
@@ -61,61 +114,72 @@ export default function TaskManager() {
             )}
           </div>
 
-          {/* Scrollable Task List */}
-          <ScrollArea ref={scrollContainerRef} className="h-[45%] w-full">
+          {loading && <p className="text-center text-gray-500">Loading tasks...</p>}
+          {error && <p className="text-center text-red-500">{error}</p>}
 
-            <div className="space-y-3">
-              {tasks.slice(0, showAllTasks ? tasks.length : 10).map((task) => (
-                <div
-                  key={task.id}
-                  className={`rounded-lg p-4 bg-white hover:opacity-70 cursor-pointer transition-all ${task.completed ? "opacity-75 border border-white" : "border"
-                    }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <button
-                      onClick={() => {
-                        setTasks((prevTasks) =>
-                          prevTasks.map((t) =>
-                            t.id === task.id ? { ...t, completed: !t.completed } : t
-                          )
-                        );
-                      }}
-                      className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors
-                        ${task.completed ? "border-gray-900 bg-gray-900" : "border-gray-300 hover:border-gray-400"}`}
+          {!loading && !error && tasks.length > 0 ? (
+            <ScrollArea ref={scrollContainerRef} className="h-[60vh] w-full overflow-y-auto">
+              <div className="space-y-3 w-full">
+                {tasks
+                  .filter(
+                    (task) =>
+                      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      task.content.toLowerCase().includes(searchQuery.toLowerCase())
+                  )
+                  .slice(0, showAllTasks ? tasks.length : 10)
+                  .map((task) => (
+                    <div
+                      key={task._id || task.id}
+                      className="rounded-lg p-4 bg-white hover:opacity-70 cursor-pointer transition-all border overflow-hidden"
                     >
-                      {task.completed && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
-                    </button>
-                    <div className="flex-1">
-                      <h3 className={`font-medium ${task.completed ? "text-gray-500 line-through" : "text-gray-900"}`}>
-                        {task.title}
-                      </h3>
-                      <p className="text-gray-500 text-sm">{task.description}</p>
+                      <div className="flex items-start gap-3">
+                        <button
+                          onClick={() => toggleTask(task._id, task.completed)}
+                          className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${task.completed ? "border-gray-900 bg-gray-900" : "border-gray-300 hover:border-gray-400"
+                            }`}
+                        >
+                          {task.completed && (
+                            <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
+                          )}
+                        </button>
+
+                        <div className="flex-1">
+                          <h3 className={`font-medium ${task.completed ? "text-gray-500 line-through" : "text-gray-900"
+                            }`}>
+                            {truncateText(task.title, 50)}
+                          </h3>
+                          <p className="text-gray-500 text-sm">{truncateText(task.content, 100)}</p>
+                        </div>
+                      </div>
                     </div>
+                  ))}
+
+                {/* Show More Button Inside Scrollable Area */}
+                {!showAllTasks && tasks.length > 10 && (
+                  <div className="py-4 flex justify-center w-full">
+                    <Button
+                      variant="ghost"
+                      className="text-gray-500 hover:bg-gray-100"
+                      onClick={() => setShowAllTasks(true)}
+                    >
+                      Show more results
+                    </Button>
                   </div>
-                </div>
-              ))}
-            </div>
-
-          </ScrollArea>
-
-          {/* Show More Results Button */}
-          {!showAllTasks && tasks.length > 10 && (
-            <div className="py-4 flex justify-center">
-              <Button variant="ghost" className="text-gray-500 hover:bg-gray-100" onClick={() => setShowAllTasks(true)}>
-                Show more results
-              </Button>
-            </div>
+                )}
+              </div>
+            </ScrollArea>
+          ) : (
+            !loading && !error && <p className="text-center text-gray-500">No tasks found.</p>
           )}
         </div>
-      </main >
+      </main>
 
-      {/* Scroll to Top Button */}
-      < Button
+      <Button
         className="fixed bottom-6 right-6 rounded-full bg-gray-900 hover:bg-gray-800 h-12 w-12 shadow-lg transition-transform hover:scale-105"
         onClick={scrollToTop}
       >
         <ArrowUp className="h-4 w-4 text-white" />
-      </Button >
-    </div >
+      </Button>
+    </div>
   );
 }
