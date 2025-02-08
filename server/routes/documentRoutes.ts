@@ -15,6 +15,6 @@ router.put("/updatetasks/:id", updateDocument);
 router.delete("/deletetasks/:id", deleteDocument);
 router.post("/searchtasks", searchDocuments);
 router.get("/gettasks", getDocuments);
-router.post("findtasks", searchDocumentsbyID);
+router.post("/findtasks", searchDocumentsbyID);
 
 export default router;
