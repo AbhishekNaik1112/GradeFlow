@@ -12,6 +12,7 @@ const tags = Array.from({ length: 50 }).map(
 )
 
 export default function TaskManager() {
+  const [isCompleted, setIsCompleted] = useState(status === "Complete");
 
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllTasks, setShowAllTasks] = useState(false);

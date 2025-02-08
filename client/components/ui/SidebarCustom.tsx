@@ -4,18 +4,16 @@ import { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Check } from "lucide-react";
 import Link from "next/link";
 
 export default function Sidebar({
-  tasks,
-  toggleTaskCompletion
+  tasks: initialTasks,
 }: {
   tasks: any[];
-  toggleTaskCompletion: (taskId: number) => void;
 }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [tasks, setTasks] = useState(initialTasks);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,6 +22,17 @@ export default function Sidebar({
 
     return () => clearInterval(interval);
   }, []);
+
+  // Toggle task completion status
+  const toggleTaskCompletion = (taskId: number) => {
+    setTasks(prevTasks =>
+      prevTasks.map(task =>
+        task.id === taskId
+          ? { ...task, completed: !task.completed }
+          : task
+      )
+    );
+  };
 
   // Filter tasks based on category
   const filteredTasks =
@@ -44,9 +53,9 @@ export default function Sidebar({
 
         {/* Select for Category Filtering */}
         <div className="mb-4">
-          <Select onValueChange={setSelectedCategory} >
+          <Select onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-full bg-white border border-gray-200 shadow-none">
-              <SelectValue placeholder="Select Category"/>
+              <SelectValue placeholder="Select Category" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All</SelectItem>
@@ -62,16 +71,33 @@ export default function Sidebar({
           {filteredTasks.map(task => (
             <div
               key={task.id}
-              className={`rounded-lg p-3 transition-all ${task.completed ? 'bg-gray-50 opacity-75' : 'bg-white border'}`}
+              className={`rounded-lg p-3 border transition-all ${task.completed ? 'bg-gray-50 opacity-75 border-white' : 'bg-white '}`}
             >
               <div className="flex items-start gap-3">
-                <button
-                  onClick={() => toggleTaskCompletion(task.id)}
-                  className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors
-                    ${task.completed ? 'border-gray-900 bg-gray-900' : 'border-gray-300 hover:border-gray-400'}`}
-                >
-                  {task.completed && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
-                </button>
+                <div className="checkbox-wrapper-12 scale-90">
+                  <div className="cbx">
+                    <input
+                      type="checkbox"
+                      id={`cbx-${task.id}`}
+                      checked={task.completed}
+                      onChange={() => toggleTaskCompletion(task.id)}
+                    />
+                    <label htmlFor={`cbx-${task.id}`}></label>
+                    <svg fill="none" viewBox="0 0 15 14" height="14" width="15">
+                      <path d="M2 8.36364L6.23077 12L13 2"></path>
+                    </svg>
+                  </div>
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <filter id="goo-12">
+                        <feGaussianBlur result="blur" stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+                        <feColorMatrix result="goo-12" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" mode="matrix" in="blur"></feColorMatrix>
+                        <feBlend in2="goo-12" in="SourceGraphic"></feBlend>
+                      </filter>
+                    </defs>
+                  </svg>
+                </div>
+
                 <div className="flex-1">
                   <h3 className={`font-medium ${task.completed ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
                     {task.title}

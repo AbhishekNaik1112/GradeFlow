@@ -1,3 +1,5 @@
+// "use client";
+
 import type { Metadata } from "next";
 import Sidebar from "@/components/ui/SidebarCustom";
 import Navbar from "@/components/ui/navBar";
@@ -15,6 +17,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body>
@@ -82,6 +85,8 @@ export default function RootLayout({
           // toggleTaskCompletion={(taskId: number) => {
           //   console.log(`Task ${taskId} toggled`); 
           // }}
+
+          
           />
 
           <div className="flex-1 flex flex-col">
