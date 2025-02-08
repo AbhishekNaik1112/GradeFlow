@@ -175,7 +175,8 @@ export async function searchDocumentsbyID(
   res: Response
 ): Promise<void> {
   try {
-    const { email, date } = req.query;
+    const { email, date } = req.body || req.query || req.params;
+    console.log(email, date);
 
     if (!email || !date) {
       res.status(400).json({ error: "Email and date are required." });
@@ -183,15 +184,20 @@ export async function searchDocumentsbyID(
     }
 
     const dateString = date as string;
+    console.log(dateString);
     const startOfDay = new Date(dateString + "T00:00:00Z");
     const endOfDay = new Date(dateString + "T23:59:59Z");
-
+    console.log(startOfDay, endOfDay);
     const documents = await DocumentModel.find({
       userEmail: email,
-      deadline: { $gte: startOfDay, $lt: endOfDay },
+      deadline: dateString,
     });
 
-    const result = documents.map((doc) => ({ userEmail: doc.userEmail }));
+    const result = documents.map((doc) => ({
+      userEmail: doc.userEmail,
+      title: doc.title,
+      content: doc.content,
+    }));
 
     res.json({ results: result });
   } catch (error) {
