@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "./button";
 import { HelpCircle, Link2 } from "lucide-react";
 
+
 const Navbar = () => {
   return (
     <>
@@ -23,9 +24,11 @@ const Navbar = () => {
           <Button variant="ghost" className="text-gray-600 hover:bg-gray-50 gap-1.5">
             Help <HelpCircle className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" className="text-gray-600 hover:bg-gray-50 gap-1.5">
-            Docs <Link2 className="h-4 w-4" />
-          </Button>
+          <Link href="/docs">
+            <Button variant="ghost" className="text-gray-600 hover:bg-gray-50 gap-1.5">
+              Docs <Link2 className="h-4 w-4" />
+            </Button>
+          </Link>
         </div>
       </nav>
     </>
