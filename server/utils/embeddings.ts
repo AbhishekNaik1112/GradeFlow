@@ -4,19 +4,40 @@ let embedder: any = null;
 
 export async function getEmbedder() {
   if (!embedder) {
-    embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
+    try {
+      embedder = await pipeline(
+        "feature-extraction",
+        "Xenova/all-MiniLM-L6-v2"
+      );
+    } catch (err) {
+      console.error("Error initializing embedder:", err);
+      throw err;
+    }
   }
   return embedder;
 }
 
 export async function embedText(text: string): Promise<number[]> {
   const extractor = await getEmbedder();
-  const result = await extractor(text, { pooling: "mean", normalize: true });
-  return Array.from(result.data);
+  try {
+    const result = await extractor(text, { pooling: "mean", normalize: true });
+    return Array.from(result.data);
+  } catch (err) {
+    console.error("Error embedding text:", err);
+    throw err;
+  }
 }
 
-export async function embedDocuments(texts: string[]): Promise<number[][]> {
+export async function embedTexts(texts: string[]): Promise<number[][]> {
   const extractor = await getEmbedder();
-  const results = await extractor(texts, { pooling: "mean", normalize: true });
-  return results.map((res: any) => Array.from(res.data));
+  try {
+    const results = await extractor(texts, {
+      pooling: "mean",
+      normalize: true,
+    });
+    return results.data.map((emb: any) => Array.from(emb));
+  } catch (err) {
+    console.error("Error embedding texts:", err);
+    throw err;
+  }
 }
