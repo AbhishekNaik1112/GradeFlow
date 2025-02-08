@@ -54,8 +54,8 @@ export default function AddTask() {
   
     const taskData = {
       title: task.title,
-      content: task.description, 
-      deadline: task.deadline.toISOString(), 
+      content: task.description, // Backend expects 'content'
+      deadline: format(task.deadline, "yyyy-MM-dd"), // Format the date correctly
       userEmail: task.userEmail,
       type: task.type,
       status: task.status,
@@ -81,6 +81,7 @@ export default function AddTask() {
       console.error("Error:", err);
     }
   };
+  
   
 
   const isFormValid = task.title && task.description && task.deadline && task.type;
