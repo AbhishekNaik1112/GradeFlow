@@ -8,13 +8,21 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowUp, Check, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useTasks } from "../taskcontext";
 
 export default function TaskManager() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllTasks, setShowAllTasks] = useState(false);
-  const [tasks, setTasks] = useState([]);
+  const { tasks, updateTaskStatus ,setTasks} = useTasks();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const router = useRouter();
+
+  const user = localStorage.getItem("userEmail");
+  if (!user) {
+    router.push("/userdetails");
+  }
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -28,14 +36,16 @@ export default function TaskManager() {
         }
 
         const data = await response.json();
-        console.log("API Response:", data);
-
+        // console.log(data)
         if (data && Array.isArray(data.documents)) {
-          const formattedTasks = data.documents.map(task => ({
-            ...task,
-            completed: task.status === "complete",
-          }));
-          setTasks(formattedTasks);
+          const userTasks = data.documents
+            .filter((task) => task.userEmail === user)
+            .map((task) => ({
+              ...task,
+              completed: task.status === "complete",
+            }));
+
+          setTasks(userTasks);
         } else {
           console.error("Unexpected API response format:", data);
           setTasks([]);
@@ -43,21 +53,17 @@ export default function TaskManager() {
       } catch (err: any) {
         console.error("Fetch Error:", err);
         setError(err.message);
-        setTasks([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchTasks();
-  }, []);
+  }, [user]);
 
   const toggleTask = async (taskId: string, currentStatus: boolean) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task._id === taskId ? { ...task, completed: !currentStatus } : task
-      )
-    );
+    const newStatus = !currentStatus;
+    updateTaskStatus(taskId, newStatus);
 
     try {
       const response = await fetch(`https://gradeflow.onrender.com/api/updatetasks/${taskId}`, {
@@ -66,7 +72,7 @@ export default function TaskManager() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          status: !currentStatus ? "complete" : "incomplete",
+          status: newStatus ? "complete" : "incomplete",
         }),
       });
 
@@ -75,12 +81,7 @@ export default function TaskManager() {
       }
     } catch (error) {
       console.error("Error updating task:", error);
-
-      setTasks(prevTasks =>
-        prevTasks.map(task =>
-          task._id === taskId ? { ...task, completed: currentStatus } : task
-        )
-      );
+      updateTaskStatus(taskId, currentStatus); // Revert on error
     }
   };
 

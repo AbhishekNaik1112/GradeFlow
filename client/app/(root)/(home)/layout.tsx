@@ -1,3 +1,5 @@
+// "use client";
+import { TasksProvider } from "./taskcontext";
 import type { Metadata } from "next";
 import Sidebar from "@/components/ui/SidebarCustom";
 import Navbar from "@/components/ui/navBar";
@@ -19,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+          <TasksProvider>
         <div className="flex h-screen bg-gray-50">
 
           <Sidebar
@@ -91,8 +94,10 @@ export default function RootLayout({
             <Navbar />
 
             {children}
+
           </div>
         </div>
+            </TasksProvider>
       </body>
     </html>
   );
