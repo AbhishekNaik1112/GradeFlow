@@ -64,7 +64,7 @@ export default function TaskCard({
 
             <Badge
               variant={isCompleted ? "secondary" : "destructive"}
-              className={`text-sm font-normal flex items-center gap-1 px-2 py-1 ${isCompleted ? "bg-green-500 text-white" : "bg-red-500"}`}
+              className={`text-sm font-normal flex items-center gap-1 px-2 py-1 ${isCompleted ? "bg-green-500 hover:bg-green-500 text-white" : "bg-red-500 hover:bg-red-500"}`}
             >
               {isCompleted ? "Complete" : "Incomplete"}
               {!isCompleted && <X className="h-3 w-3" />}

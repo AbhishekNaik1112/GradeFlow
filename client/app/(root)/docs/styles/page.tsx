@@ -23,8 +23,8 @@ const TechStack = () => {
             <div className="p-4 cursor-pointer " onClick={() => router.push("/docs")}>
               <h2 className="text-lg ">Getting Started</h2>
             </div>
-            <div className="p-4 rounded-lg bg-gray-200 cursor-pointer">
-              <h2 className="text-lg font-semibold">Information</h2>
+            <div className="p-4 rounded-lg bg-gray-100 cursor-pointer">
+              <h2 className="text-lg font-semibold">Technologies</h2>
             </div>
           </nav>
         </aside>
@@ -32,21 +32,15 @@ const TechStack = () => {
         {/* Main Content Section */}
         <ScrollArea className="h-[calc(100vh-5rem)] overflow-y-auto flex-grow">
           <main className="flex-1 max-w-4xl">
-            <h1 className="text-4xl font-bold mb-8">Understanding the Tech Stack</h1>
+            <h1 className="text-3xl font-bold mb-8">Understanding the Tech Stack</h1>
 
             <section className="space-y-6">
-              <h2 className="text-2xl font-semibold">What is a Tech Stack?</h2>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                A tech stack is a collection of technologies used to build a website or an application.
-                Think of it as ingredients in a recipe, each playing a role in making the final product.
-              </p>
-
-              <h2 className="text-2xl font-semibold">Technologies Used</h2>
+              <h2 className="text-xl font-semibold">Technologies Used</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex flex-col gap-2 border-l-4 border-blue-500">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl border flex flex-col gap-2 border-l-4 border-custom-blue">
                   <div className="flex items-center gap-2">
-                    <Code className="h-6 w-6 text-blue-500" />
+                    <Code className="h-6 w-6 text-custom-blue" />
                     <h3 className="text-lg font-semibold">Frontend (User Interface) – Next.js</h3>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300">
@@ -57,9 +51,9 @@ const TechStack = () => {
                   </p>
                 </div>
 
-                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex flex-col gap-2 border-l-4 border-green-500">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl border flex flex-col gap-2 border-l-4 border-custom-blue">
                   <div className="flex items-center gap-2">
-                    <Server className="h-6 w-6 text-green-500" />
+                    <Server className="h-6 w-6 border-custom-blue" />
                     <h3 className="text-lg font-semibold">Backend (Logic & Data Handling) – Node.js with Express</h3>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300">
@@ -70,9 +64,9 @@ const TechStack = () => {
                   </p>
                 </div>
 
-                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex flex-col gap-2 border-l-4 border-purple-500">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl border flex flex-col gap-2 border-l-4 border-custom-blue">
                   <div className="flex items-center gap-2">
-                    <Database className="h-6 w-6 text-purple-500" />
+                    <Database className="h-6 w-6 border-custom-blue" />
                     <h3 className="text-lg font-semibold">Database – MongoDB & LocalStorage</h3>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300">
@@ -83,9 +77,9 @@ const TechStack = () => {
                   </p>
                 </div>
 
-                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex flex-col gap-2 border-l-4 border-yellow-500">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl border flex flex-col gap-2 border-l-4 border-custom-blue">
                   <div className="flex items-center gap-2">
-                    <Terminal className="h-6 w-6 text-yellow-500" />
+                    <Terminal className="h-6 w-6 border-custom-blue" />
                     <h3 className="text-lg font-semibold">Sentence Processing – Xenova Transformer</h3>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300">
@@ -96,9 +90,9 @@ const TechStack = () => {
                   </p>
                 </div>
 
-                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg flex flex-col gap-2 border-l-4 border-red-500">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl border flex flex-col gap-2 border-l-4 border-custom-blue">
                   <div className="flex items-center gap-2">
-                    <Mail className="h-6 w-6 text-red-500" />
+                    <Mail className="h-6 w-6 border-custom-blue" />
                     <h3 className="text-lg font-semibold">Mailing System – Nodemailer</h3>
                   </div>
                   <p className="text-gray-600 dark:text-gray-300">
@@ -109,19 +103,6 @@ const TechStack = () => {
                   </p>
                 </div>
               </div>
-
-              <h2 className="text-2xl font-semibold">Team Members</h2>
-              <div className="space-y-2 text-gray-700 dark:text-gray-300">
-                <p>- Abhishek G Naik</p>
-                <p>- Abdulla Shahil</p>
-                <p>- Pratham Shailesh Dsouza</p>
-                <p>- Musthafa C P</p>
-                <p>- Samarth S Alva</p>
-              </div>
-              <br />
-              <br />
-              <br />
-
             </section>
           </main>
         </ScrollArea>

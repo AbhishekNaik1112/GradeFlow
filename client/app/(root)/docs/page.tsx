@@ -21,17 +21,17 @@ export default function DocumentationPage() {
                 {/* Sidebar */}
                 <aside className="w-64 flex-shrink-0">
                     <nav className="space-y-1">
-                        <div className="p-4 rounded-lg bg-gray-200 cursor-pointer">
+                        <div className="p-4 rounded-lg bg-gray-100 cursor-pointer">
                             <h2 className="text-lg font-semibold">Getting Started</h2>
                         </div>
-                        <div className="p-4" onClick={() => router.push("/docs/styles")}>
-                            <h2 className="text-lg cursor-pointer">Information</h2>
+                        <div className="p-4 cursor-pointer" onClick={() => router.push("/docs/styles")}>
+                            <h2 className="text-lg cursor-pointer">Technologies</h2>
                         </div>
                     </nav>
                 </aside>
 
                 {/* Main Content Area */}
-                <ScrollArea className="h-[calc(100vh-4rem)]">
+                <ScrollArea className="h-[calc(100vh-4rem)] pr-5">
                     <main className="flex-1 max-w-4xl overflow-y-auto">
                         <h1 className="text-4xl font-bold mb-8">Getting Started with GradeFlow</h1>
 
@@ -51,10 +51,10 @@ export default function DocumentationPage() {
                                 grades across multiple subjects? Managing schoolwork can be overwhelming,
                                 but GradeFlow simplifies it all.
                                 <br />
-                                <br />✅ Stay Organized: Keep track of assignments, deadlines, and grades in one place.
-                                <br />✅ AI-Powered Assistance: Get smart study recommendations tailored to your progress.
-                                <br />✅ Attach Notes: Easily save important notes alongside your study materials and lectures.
-                                <br />✅ Boost Productivity: Plan your studies effectively and avoid last-minute cramming.
+                                <br />- Stay Organized: Keep track of assignments, deadlines, and grades in one place.
+                                <br />- AI-Powered Assistance: Get smart study recommendations tailored to your progress.
+                                <br />- Attach Notes: Easily save important notes alongside your study materials and lectures.
+                                <br />- Boost Productivity: Plan your studies effectively and avoid last-minute cramming.
                             </p>
 
                             <h2 className="text-2xl font-semibold">Where does it come from?</h2>
@@ -85,13 +85,6 @@ export default function DocumentationPage() {
                                 <strong>Step 4: Stay Consistent</strong>
                                 <br />
                                 GradeFlow will send reminders and study tips to keep you motivated and on track.
-                            </p>
-
-                            <h2 className="text-2xl font-semibold">Conclusion</h2>
-                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                                GradeFlow is more than just a planner—it’s your study companion. With AI-driven insights,
-                                easy tracking, and a user-friendly interface, managing your academics has never been easier.
-                                Start using GradeFlow today and take control of your learning journey!
                             </p>
 
                             <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
