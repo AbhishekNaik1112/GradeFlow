@@ -10,7 +10,7 @@ import {
 const router = Router();
 
 router.post("/addtasks", addDocument);
-router.post("/updatetasks", updateDocument);
+router.post("/updatetasks/:id", updateDocument);
 router.delete("/deletetasks", deleteDocument);
 router.post("/searchtasks", searchDocuments);
 router.get("/gettasks", getDocuments);
