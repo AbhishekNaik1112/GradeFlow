@@ -3,7 +3,7 @@ import { DocumentModel } from "../models/documents";
 import { embedText } from "../utils/embeddings";
 import { cosineSimilarity } from "../utils/same";
 
-export async function addDocuments(req: Request, res: Response): Promise<void> {
+export async function addDocument(req: Request, res: Response): Promise<void> {
   try {
     const { title, content, deadline, type, userEmail, status } = req.body;
     if (!title || !content || !deadline || !userEmail || !type || !status) {
@@ -30,7 +30,57 @@ export async function addDocuments(req: Request, res: Response): Promise<void> {
       .status(201)
       .json({ message: "Document added successfully", document: newDoc });
   } catch (error) {
-    console.error("Error in addDocuments:", error);
+    console.error("Error in addDocument:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export async function updateDocument(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { title, content, deadline, type, userEmail, status } = req.body;
+    const doc = await DocumentModel.findById(id);
+    if (!doc) {
+      res.status(404).json({ error: "Document not found." });
+      return;
+    }
+    if (title) doc.title = title;
+    if (content) doc.content = content;
+    if (deadline) doc.deadline = deadline;
+    if (type) doc.type = type;
+    if (userEmail) doc.userEmail = userEmail;
+    if (status) doc.status = status;
+    if (title || content) {
+      doc.embedding = await embedText(`${doc.title} ${doc.content}`);
+      doc.titleEmbedding = await embedText(doc.title);
+    }
+    await doc.save();
+    res
+      .status(200)
+      .json({ message: "Document updated successfully", document: doc });
+  } catch (error) {
+    console.error("Error in updateDocument:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export async function deleteDocument(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { id } = req.params;
+    const doc = await DocumentModel.findByIdAndDelete(id);
+    if (!doc) {
+      res.status(404).json({ error: "Document not found." });
+      return;
+    }
+    res.status(200).json({ message: "Document deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteDocument:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 }
