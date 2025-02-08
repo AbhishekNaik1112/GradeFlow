@@ -11,6 +11,7 @@ export interface Document {
   userEmail: string;
   status: statusType;
   embedding: number[];
+  titleEmbedding: number[];
 }
 
 const documentSchema = new Schema<Document>({
@@ -25,6 +26,7 @@ const documentSchema = new Schema<Document>({
     default: "incomplete",
   },
   embedding: { type: [Number], required: true },
+  titleEmbedding: { type: [Number], required: true },
 });
 
 const DocumentModel = mongoose.model<Document>("Document", documentSchema);
