@@ -28,7 +28,7 @@ export async function addDocuments(req: Request, res: Response): Promise<void> {
     await newDoc.save();
     res
       .status(201)
-      .json({ message: "Document added successfully", document: newDoc });
+      .json({ message: "Document added successfully", document: newDoc});
   } catch (error) {
     console.error("Error in addDocuments:", error);
     res.status(500).json({ error: "Internal server error" });
