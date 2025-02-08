@@ -1,5 +1,8 @@
 "use client";
 
+import { square } from 'ldrs'
+square.register()
+
 import { useState, useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
@@ -11,7 +14,7 @@ import { useTasks } from "../taskcontext";
 export default function TaskManager() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllTasks, setShowAllTasks] = useState(false);
-  const { tasks, updateTaskStatus } = useTasks();
+  const { tasks, updateTaskStatus ,setTasks} = useTasks();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const router = useRouter();
@@ -42,7 +45,10 @@ export default function TaskManager() {
               completed: task.status === "complete",
             }));
 
-          updateTaskStatus(userTasks); 
+          setTasks(userTasks);
+        } else {
+          console.error("Unexpected API response format:", data);
+          setTasks([]);
         }
       } catch (err: any) {
         console.error("Fetch Error:", err);
@@ -92,7 +98,7 @@ export default function TaskManager() {
   return (
     <div className="h-screen bg-gray-50 flex flex-col">
       <main className="flex-1 p-6 bg-white flex flex-col h-[40%]">
-        <div className="max-w-3xl mx-auto flex-1 flex flex-col w-[100%]">
+        <div className="max-w-3xl mx-auto flex-1 flex flex-col w-[100%] ">
           <h2 className="mb-6 text-3xl font-semibold text-gray-900 text-center">
             Find what you're looking for!
           </h2>
@@ -112,8 +118,19 @@ export default function TaskManager() {
             )}
           </div>
 
-          {loading && <p className="text-center text-gray-500">Loading tasks...</p>}
-          {error && <p className="text-center text-red-500">{error}</p>}
+
+          {loading && <center className=' h-[50vh] flex justify-center items-center'>
+            <l-square
+              size="35"
+              stroke="5"
+              stroke-length="0.25"
+              bg-opacity="0.1"
+              speed="1.2"
+              color="#074E6C"
+              className="text-center"></l-square>
+            {error && <p className="text-center text-red-500">{error}</p>}
+          </center>
+          }
 
           {!loading && !error && tasks.length > 0 ? (
             <ScrollArea ref={scrollContainerRef} className="h-[60vh] w-full overflow-y-auto">
@@ -128,18 +145,34 @@ export default function TaskManager() {
                   .map((task) => (
                     <div
                       key={task._id || task.id}
-                      className="rounded-lg p-4 bg-white hover:opacity-70 cursor-pointer transition-all border overflow-hidden"
+                      className={`rounded-lg p-4 bg-white hover:opacity-70 border hover:border-gray-500 cursor-pointer transition-all overflow-hidden ${task.completed ? "text-gray-500 border-white bg-slate-50" : "text-gray-900 border"
+                    }`}
                     >
                       <div className="flex items-start gap-3">
-                        <button
-                          onClick={() => toggleTask(task._id, task.completed)}
-                          className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${task.completed ? "border-gray-900 bg-gray-900" : "border-gray-300 hover:border-gray-400"
-                            }`}
-                        >
-                          {task.completed && (
-                            <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
-                          )}
-                        </button>
+                        <div className="checkbox-wrapper-12 scale-90">
+                          <div className="cbx">
+                            <input
+                              type="checkbox"
+                              id={`cbx-${task._id}`}
+                              checked={task.completed}
+                              onChange={() => toggleTask(task._id, task.completed)}
+                            />
+                            <label htmlFor={`cbx-${task._id}`}></label>
+                            <svg fill="none" viewBox="0 0 15 14" height="14" width="15">
+                              <path d="M2 8.36364L6.23077 12L13 2"></path>
+                            </svg>
+                          </div>
+                          <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                              <filter id="goo-12">
+                                <feGaussianBlur result="blur" stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
+                                <feColorMatrix result="goo-12" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" mode="matrix" in="blur"></feColorMatrix>
+                                <feBlend in2="goo-12" in="SourceGraphic"></feBlend>
+                              </filter>
+                            </defs>
+                          </svg>
+                        </div>
+
 
                         <div className="flex-1">
                           <h3 className={`font-medium ${task.completed ? "text-gray-500 line-through" : "text-gray-900"

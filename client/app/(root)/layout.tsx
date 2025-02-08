@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "GradeFlow",
-  description: "Meetings on the go",
+  description: "Smarter studying!",
   icons: {
-    icon: "/icons/ovid-header.svg",
+    icon: "/publiclogo.svg",
   },
 };
 
