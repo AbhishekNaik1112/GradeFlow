@@ -184,10 +184,6 @@ export async function searchDocumentsbyID(
     }
 
     const dateString = date as string;
-    console.log(dateString);
-    const startOfDay = new Date(dateString + "T00:00:00Z");
-    const endOfDay = new Date(dateString + "T23:59:59Z");
-    console.log(startOfDay, endOfDay);
     const documents = await DocumentModel.find({
       userEmail: email,
       deadline: dateString,
