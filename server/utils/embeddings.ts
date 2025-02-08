@@ -5,7 +5,7 @@ let embedder: any = null;
 export async function getEmbedder() {
   if (!embedder) {
     try {
-      embedder = await pipeline("feature-extraction", "sentence-transformers/all-MiniLM-L6-v2");
+      embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
     } catch (err) {
       console.error("Error initializing embedder:", err);
       throw err;
