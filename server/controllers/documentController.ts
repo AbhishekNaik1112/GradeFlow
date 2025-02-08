@@ -3,6 +3,25 @@ import { DocumentModel } from "../models/documents";
 import { embedText } from "../utils/embeddings";
 import { cosineSimilarity } from "../utils/same";
 
+export async function getTaskById(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { id } = req.params;
+    const doc = await DocumentModel.findById(id);
+    if (!doc) {
+      res.status(404).json({ error: "Document not found." });
+      return;
+    }
+    res.json({ document: doc });
+  } catch (error) {
+    console.error("Error in getTaskById:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+
 export async function addDocument(req: Request, res: Response): Promise<void> {
   try {
     const { title, content, deadline, type, userEmail, status } = req.body;
