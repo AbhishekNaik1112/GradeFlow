@@ -18,7 +18,7 @@ interface Task {
   description: string;
   deadline: Date | undefined;
   userEmail: string;
-  type: string
+  type: string;
   status: string;
 }
 
@@ -31,7 +31,7 @@ export default function AddTask() {
     deadline: undefined,
     userEmail: email,
     type: "",
-    status: "Incomplete"
+    status: "incomplete"
   });
 
   const [open, setOpen] = useState(false);
@@ -44,23 +44,46 @@ export default function AddTask() {
     }));
   }, []);
 
-
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!task.title || !task.description || !task.deadline || !task.type) {
       setError("All fields are required!");
       return;
     }
-
-    console.log("Task:", task);
-    setError("");
-    router.push("/mainpage");
+  
+    const taskData = {
+      title: task.title,
+      content: task.description, 
+      deadline: task.deadline.toISOString(), 
+      userEmail: task.userEmail,
+      type: task.type,
+      status: task.status,
+    };
+  
+    try {
+      const response = await fetch("https://gradeflow.onrender.com/api/addtasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskData),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to add task");
+      }
+  
+      setError("");
+      router.push("/mainpage");
+    } catch (err) {
+      setError("Error submitting task. Please try again.");
+      console.error("Error:", err);
+    }
   };
+  
 
   const isFormValid = task.title && task.description && task.deadline && task.type;
-
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
