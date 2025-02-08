@@ -1,57 +1,68 @@
-"use client"
+"use client";
 
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Button } from "@/components/ui/button"
-import { ChevronDown, Check } from "lucide-react"
-import Link from "next/link";
 import { useEffect, useState } from "react";
-
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Check } from "lucide-react";
+import Link from "next/link";
 
 export default function Sidebar({
   tasks,
   toggleTaskCompletion
 }: {
-  tasks: any[]
-  toggleTaskCompletion: (taskId: number) => void
+  tasks: any[];
+  toggleTaskCompletion: (taskId: number) => void;
 }) {
-
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
-    }, 1000); // Update every second
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
+  // Filter tasks based on category
+  const filteredTasks =
+    selectedCategory === "All"
+      ? tasks
+      : tasks.filter(task => task.category === selectedCategory);
+
   return (
     <div className="w-1/4 h-screen border-r bg-gray-50 flex flex-col">
-
       <div className="p-8 pb-0">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-gray-800">Today's tasks</h1>
           <p className="text-sm font-extralight text-gray-400 mt-1">
             {currentTime.toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" })} -{" "}
             {currentTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
-          </p>        
-          </div>
+          </p>
+        </div>
 
+        {/* Select for Category Filtering */}
         <div className="mb-4">
-          <button className="flex w-full items-center justify-between rounded-lg p-2.5 hover:bg-gray-50 transition-colors">
-            <span className="text-gray-700">Reviews</span>
-            <ChevronDown className="h-4 w-4 text-gray-500" />
-          </button>
+          <Select onValueChange={setSelectedCategory} >
+            <SelectTrigger className="w-full bg-white border border-gray-200 shadow-none">
+              <SelectValue placeholder="Select Category"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All</SelectItem>
+              <SelectItem value="Material">Material</SelectItem>
+              <SelectItem value="Assignments">Assignments</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       <ScrollArea className="flex-1 px-4">
-
         <div className="space-y-2 pb-4">
-          {tasks.map(task => (
+          {filteredTasks.map(task => (
             <div
               key={task.id}
-              className={`rounded-lg p-3 transition-all ${task.completed ? 'bg-gray-50 opacity-75' : 'bg-white'}`}
+              className={`rounded-lg p-3 transition-all ${task.completed ? 'bg-gray-50 opacity-75' : 'bg-white border'}`}
             >
               <div className="flex items-start gap-3">
                 <button
@@ -75,11 +86,11 @@ export default function Sidebar({
 
       <div className="p-4 border-t">
         <Link href="/addtask">
-        <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white h-11 rounded-lg transition-colors">
-          Add a task
-        </Button>
+          <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white h-11 rounded-lg transition-colors">
+            Add a task
+          </Button>
         </Link>
       </div>
     </div>
-  )
+  );
 }

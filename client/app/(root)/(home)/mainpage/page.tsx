@@ -10,8 +10,7 @@ import * as React from "react"
 const tags = Array.from({ length: 50 }).map(
   (_, i, a) => `v1.2.0-beta.${a.length - i}`
 )
-// import {ScrollArea} from "@/components/ui/scroll-area"
-// import {Separator} from "@/components/ui/separator"
+
 export default function TaskManager() {
 
   const [searchQuery, setSearchQuery] = useState("");

@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-
-import { Button } from "@/components/ui/button";
-import { HelpCircle, Link2 } from "lucide-react";
-import Image from "next/image";
-import Sidebar from "@/components/ui/sidebar";
+import Sidebar from "@/components/ui/SidebarCustom";
 import Navbar from "@/components/ui/navBar";
 
 export const metadata: Metadata = {
@@ -32,6 +28,7 @@ export default function RootLayout({
                 description:
                   "Organize and update HR policies, employee records, and compliance documents.",
                 completed: false,
+                category: "Material",
               },
               {
                 id: 2,
@@ -39,6 +36,7 @@ export default function RootLayout({
                 description:
                   "Analyze HR data using Excel, focusing on employee performance, attendance, and recruitment trends.",
                 completed: true,
+                category: "Assignments",
               },
               {
                 id: 3,
@@ -46,8 +44,44 @@ export default function RootLayout({
                 description:
                   "Review and document employee performance evaluations for HR insights.",
                 completed: false,
+                category: "Material",
+              },
+              {
+                id: 4,
+                title: "Performance Appraisal Analysis",
+                description:
+                  "Review and document employee performance evaluations for HR insights.",
+                completed: false,
+                category: "Material",
+              },
+              {
+                id: 5,
+                title: "Performance Appraisal Analysis",
+                description:
+                  "Review and document employee performance evaluations for HR insights.",
+                completed: false,
+                category: "Material",
+              },
+              {
+                id: 6,
+                title: "Performance Appraisal Analysis",
+                description:
+                  "Review and document employee performance evaluations for HR insights.",
+                completed: false,
+                category: "Material",
+              },
+              {
+                id: 7,
+                title: "Performance Appraisal Analysis",
+                description:
+                  "Review and document employee performance evaluations for HR insights.",
+                completed: false,
+                category: "Material",
               },
             ]}
+          // toggleTaskCompletion={(taskId: number) => {
+          //   console.log(`Task ${taskId} toggled`); 
+          // }}
           />
 
           <div className="flex-1 flex flex-col">
