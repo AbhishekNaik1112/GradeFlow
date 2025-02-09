@@ -43,7 +43,7 @@ export default function Sidebar() {
       }
     } catch (error) {
       console.error("Error updating task:", error);
-      updateTaskStatus(taskId, currentStatus); // Revert on error
+      updateTaskStatus(taskId, currentStatus);
     }
   };
   // Properly filtered tasks
@@ -61,7 +61,7 @@ export default function Sidebar() {
     <div className="w-1/4 h-screen border-r bg-gray-50 flex flex-col">
       <div className="p-8 pb-0">
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">Today's tasks</h1>
+          <h1 className="text-2xl font-semibold text-gray-800">Today's deadlines</h1>
           <p className="text-sm font-extralight text-gray-400 mt-1">
             {currentTime.toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" })} -{" "}
             {currentTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}

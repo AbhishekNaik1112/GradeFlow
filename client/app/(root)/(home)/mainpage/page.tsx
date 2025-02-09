@@ -40,7 +40,6 @@ export default function TaskManager() {
         }
 
         const data = await response.json();
-        // console.log(data)
         if (data && Array.isArray(data.documents)) {
           const userTasks = data.documents
             .filter((task) => task.userEmail === user)
@@ -49,7 +48,6 @@ export default function TaskManager() {
               completed: task.status === "complete",
             }));
 
-          console.log(userTasks)
           setTasks(userTasks);
         } else {
           console.error("Unexpected API response format:", data);
@@ -138,7 +136,12 @@ export default function TaskManager() {
       }
     } catch (error) {
       console.error("Error updating task:", error);
-      updateTaskStatus(taskId, currentStatus); // Revert on error
+      updateTaskStatus(taskId, currentStatus);
+      setSearchResults((prevResults) =>
+        prevResults.map((task) =>
+          task._id === taskId ? { ...task, status: currentStatus ? "complete" : "incomplete" } : task
+        )
+      );
     }
   };
 
@@ -200,6 +203,7 @@ export default function TaskManager() {
                   const completed = result.status === "complete";
                   return (
                     <div
+                    onClick={() => router.push(`/viewTask?taskId=${result._id}`)}
                       key={result._id || result.id}
                       className={`rounded-lg p-4 bg-white hover:opacity-70 border hover:border-gray-500 cursor-pointer transition-all overflow-hidden ${completed ? "text-gray-500 border-white bg-slate-50" : "text-gray-900 border"
                         }`}
@@ -254,47 +258,39 @@ export default function TaskManager() {
                 </center>
               )}
 
-          {!loading && !error && tasks.length > 0 ? (
-            <ScrollArea ref={scrollContainerRef} className="h-[60vh] w-full overflow-y-auto">
-              <div className="space-y-3 w-full">
-                {tasks
-                  .filter(
-                    (task) =>
-                      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                      task.content.toLowerCase().includes(searchQuery.toLowerCase())
-                  )
-                  .slice(0, showAllTasks ? tasks.length : 10)
-                  .map((task) => (
-                    <div
-                      key={task._id || task.id}
-                      className={`rounded-lg p-4 bg-white hover:opacity-70 border hover:border-gray-500 cursor-pointer transition-all overflow-hidden ${task.completed ? "text-gray-500 border-white bg-slate-50" : "text-gray-900 border"
-                    }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="checkbox-wrapper-12 scale-90">
-                          <div className="cbx">
-                            <input
-                              type="checkbox"
-                              id={`cbx-${task._id}`}
-                              checked={task.completed}
-                              onChange={() => toggleTask(task._id, task.completed)}
-                            />
-                            <label htmlFor={`cbx-${task._id}`}></label>
-                            <svg fill="none" viewBox="0 0 15 14" height="14" width="15">
-                              <path d="M2 8.36364L6.23077 12L13 2"></path>
-                            </svg>
-                          </div>
-                          <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                              <filter id="goo-12">
-                                <feGaussianBlur result="blur" stdDeviation="4" in="SourceGraphic"></feGaussianBlur>
-                                <feColorMatrix result="goo-12" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" mode="matrix" in="blur"></feColorMatrix>
-                                <feBlend in2="goo-12" in="SourceGraphic"></feBlend>
-                              </filter>
-                            </defs>
-                          </svg>
-                        </div>
+              {!loading && !error && tasks.length > 0 ? (
+                <ScrollArea ref={scrollContainerRef} className="h-[60vh] w-full overflow-y-auto">
+                  <div className="space-y-3 w-full">
+                    {tasks
+                      .filter(
+                        (task) =>
+                          task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          task.content.toLowerCase().includes(searchQuery.toLowerCase())
+                      )
+                      .slice(0, showAllTasks ? tasks.length : 10)
+                      .map((task) => (
+                        <div
+                        onClick={() => router.push(`/viewTask?taskId=${task._id}`)}
 
+                          key={task._id || task.id}
+                          className={`rounded-lg p-4 bg-white hover:opacity-70 border hover:border-gray-500 cursor-pointer transition-all overflow-hidden ${task.completed ? "text-gray-500 border-white bg-slate-50" : "text-gray-900 border"
+                            }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="checkbox-wrapper-12 scale-90">
+                              <div className="cbx">
+                                <input
+                                  type="checkbox"
+                                  id={`cbx-${task._id}`}
+                                  checked={task.completed}
+                                  onChange={() => toggleTask(task._id, task.completed)}
+                                />
+                                <label htmlFor={`cbx-${task._id}`}></label>
+                                <svg fill="none" viewBox="0 0 15 14" height="14" width="15">
+                                  <path d="M2 8.36364L6.23077 12L13 2"></path>
+                                </svg>
+                              </div>
+                            </div>
 
                             <div className="flex-1">
                               <h3 className={`font-medium ${task.completed ? "text-gray-500 line-through" : "text-gray-900"
