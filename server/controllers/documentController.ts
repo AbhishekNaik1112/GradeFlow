@@ -5,7 +5,7 @@ import { cosineSimilarity } from "../utils/same";
 
 export async function getTaskById(req: Request, res: Response): Promise<void> {
   try {
-    const { id } = req.params;
+    const { id } = req.params || req.query || req.body;
     const doc = await DocumentModel.findById(id);
     if (!doc) {
       res.status(404).json({ error: "Document not found." });
