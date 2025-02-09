@@ -21,6 +21,7 @@ export async function getTaskById(req: Request, res: Response): Promise<void> {
 export async function addDocument(req: Request, res: Response): Promise<void> {
   try {
     const { title, content, deadline, type, userEmail, status } = req.body;
+
     if (!title || !content || !deadline || !userEmail || !type || !status) {
       res.status(400).json({
         error:
@@ -28,19 +29,24 @@ export async function addDocument(req: Request, res: Response): Promise<void> {
       });
       return;
     }
+
     const fullEmbedding = await embedText(`${title} ${content}`);
     const titleEmbedding = await embedText(title);
+
     const newDoc = new DocumentModel({
       title,
       content,
-      deadline: deadline || null,
+      deadline,
       userEmail,
       status,
       type,
       embedding: fullEmbedding,
       titleEmbedding: titleEmbedding,
+      createdAt: new Date().toISOString().split("T")[0],
     });
+
     await newDoc.save();
+
     res
       .status(201)
       .json({ message: "Document added successfully", document: newDoc });

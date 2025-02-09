@@ -12,6 +12,7 @@ export interface Document {
   status: statusType;
   embedding: number[];
   titleEmbedding: number[];
+  createdAt: string; // Added createdAt field
 }
 
 const documentSchema = new Schema<Document>({
@@ -27,6 +28,10 @@ const documentSchema = new Schema<Document>({
   },
   embedding: { type: [Number], required: true },
   titleEmbedding: { type: [Number], required: true },
+  createdAt: {
+    type: String,
+    default: () => new Date().toISOString().split("T")[0],
+  },
 });
 
 const DocumentModel = mongoose.model<Document>("Document", documentSchema);
