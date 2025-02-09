@@ -10,51 +10,24 @@ import { useTasks } from "@/app/(root)/(home)/taskcontext"
 export default function Sidebar() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const { tasks, setTasks, updateTaskStatus } = useTasks();
+  const { tasks, updateTaskStatus } = useTasks();
+
+  // Calculate today's date in local timezone
+  const today = new Date();
+  const offset = today.getTimezoneOffset();
+  today.setMinutes(today.getMinutes() - offset);
+  const todayString = today.toISOString().split('T')[0];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const user = localStorage.getItem("userEmail");
-        if (!user) return;
-
-        const response = await fetch("https://gradeflow.onrender.com/api/gettasks");
-        if (!response.ok) throw new Error("Failed to fetch tasks");
-
-        const data = await response.json();
-        if (data && Array.isArray(data.documents)) {
-          const today = new Date().toISOString().split("T")[0];
-
-          const userTasks = data.documents
-            .filter((task) => task.userEmail === user && task.deadline?.startsWith(today))
-            .map((task) => ({
-              ...task,
-              completed: task.status === "complete",
-            }));
-
-          setTasks(userTasks);
-        }
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-        setTasks([]);
-      }
-    };
-
-    fetchTasks();
-  }, [setTasks]);
 
   const toggleTaskCompletion = async (taskId: string, currentStatus: boolean) => {
     const newStatus = !currentStatus;
     updateTaskStatus(taskId, newStatus);
-
     try {
       const response = await fetch(`https://gradeflow.onrender.com/api/updatetasks/${taskId}`, {
         method: "PUT",
@@ -65,7 +38,6 @@ export default function Sidebar() {
           status: newStatus ? "complete" : "incomplete",
         }),
       });
-
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
@@ -74,12 +46,17 @@ export default function Sidebar() {
       updateTaskStatus(taskId, currentStatus); // Revert on error
     }
   };
+  // Properly filtered tasks
+  const filteredTasks = tasks
+    .filter(task => {
+      const taskDate = task.deadline?.split('T')[0];
+      return taskDate === todayString;
+    })
+    .filter(task => 
+      selectedCategory === "All" || task.type === selectedCategory
+    );
 
-  const filteredTasks =
-    selectedCategory === "All"
-      ? tasks
-      : tasks.filter((task) => task.type === selectedCategory);
-
+  
   return (
     <div className="w-1/4 h-screen border-r bg-gray-50 flex flex-col">
       <div className="p-8 pb-0">

@@ -3,9 +3,25 @@ import { DocumentModel } from "../models/documents";
 import { embedText } from "../utils/embeddings";
 import { cosineSimilarity } from "../utils/same";
 
+export async function getTaskById(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params || req.query || req.body;
+    const doc = await DocumentModel.findById(id);
+    if (!doc) {
+      res.status(404).json({ error: "Document not found." });
+      return;
+    }
+    res.json({ document: doc });
+  } catch (error) {
+    console.error("Error in getTaskById:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
 export async function addDocument(req: Request, res: Response): Promise<void> {
   try {
     const { title, content, deadline, type, userEmail, status } = req.body;
+
     if (!title || !content || !deadline || !userEmail || !type || !status) {
       res.status(400).json({
         error:
@@ -13,19 +29,24 @@ export async function addDocument(req: Request, res: Response): Promise<void> {
       });
       return;
     }
+
     const fullEmbedding = await embedText(`${title} ${content}`);
     const titleEmbedding = await embedText(title);
+
     const newDoc = new DocumentModel({
       title,
       content,
-      deadline: deadline || null,
+      deadline,
       userEmail,
       status,
       type,
       embedding: fullEmbedding,
       titleEmbedding: titleEmbedding,
+      createdAt: new Date().toISOString().split("T")[0],
     });
+
     await newDoc.save();
+
     res
       .status(201)
       .json({ message: "Document added successfully", document: newDoc });
@@ -151,6 +172,38 @@ export async function getDocuments(req: Request, res: Response): Promise<void> {
     res.json({ documents });
   } catch (error) {
     console.error("Error in getDocuments:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export async function searchDocumentsbyID(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { email, date } = req.body || req.query || req.params;
+    console.log(email, date);
+
+    if (!email || !date) {
+      res.status(400).json({ error: "Email and date are required." });
+      return;
+    }
+
+    const dateString = date as string;
+    const documents = await DocumentModel.find({
+      userEmail: email,
+      deadline: dateString,
+    });
+
+    const result = documents.map((doc) => ({
+      userEmail: doc.userEmail,
+      title: doc.title,
+      content: doc.content,
+    }));
+
+    res.json({ results: result });
+  } catch (error) {
+    console.error("Error in searchDocuments:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 }

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Search, Bell } from "lucide-react";
@@ -6,6 +9,15 @@ import NavBar from "@/components/ui/navBar";
 import React from "react";
 
 export default function Page() {
+  const [redirectLink, setRedirectLink] = useState("/userdetails");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isUserLogged = JSON.parse(localStorage.getItem("userlogged") || "false");
+      setRedirectLink(isUserLogged ? "/mainpage" : "/userdetails");
+    }
+  }, []);
+
   return (
     <div className="h-screen bg-white flex flex-col overflow-hidden">
       <NavBar />
@@ -21,8 +33,7 @@ export default function Page() {
         </div>
 
         <div className="w-full max-w-6xl mx-auto grid gap-6 md:grid-cols-2 lg:grid-cols-3 px-4">
-          {[
-            { icon: Star, title: "Smart Categorized To-Do List" },
+          {[{ icon: Star, title: "Smart Categorized To-Do List" },
             { icon: Search, title: "AI-Powered Task Search" },
             { icon: Bell, title: "Deadline Reminder & Insights" },
           ].map((feature, index) => (
@@ -52,7 +63,7 @@ export default function Page() {
           ))}
         </div>
 
-        <Link href="/userdetails">
+        <Link href={redirectLink}>
           <Button
             className="mt-12 bg-[#06435C] px-8 py-6 text-lg hover:bg-[#053447] transition-transform duration-300 hover:scale-105"
             size="lg"

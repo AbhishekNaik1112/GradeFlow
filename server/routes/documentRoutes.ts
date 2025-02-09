@@ -5,14 +5,21 @@ import {
   getDocuments,
   deleteDocument,
   updateDocument,
+  searchDocumentsbyID,
+  getTaskById,
 } from "../controllers/documentController";
 
 const router = Router();
 
-router.post("/addtasks", addDocument);
-router.put("/updatetasks/:id", updateDocument);
-router.delete("/deletetasks/:id", deleteDocument);
-router.post("/searchtasks", searchDocuments);
 router.get("/gettasks", getDocuments);
+router.get("/findtask/:id", getTaskById);
+
+router.post("/addtasks", addDocument);
+router.post("/searchtasks", searchDocuments);
+router.post("/findtasks", searchDocumentsbyID);
+
+router.put("/updatetasks/:id", updateDocument);
+
+router.delete("/deletetasks/:id", deleteDocument);
 
 export default router;
