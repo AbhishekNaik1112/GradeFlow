@@ -12,7 +12,7 @@ import {
 const router = Router();
 
 router.get("/gettasks", getDocuments);
-router.get("findtask/:id", getTaskById);
+router.get("/findtask/:id", getTaskById);
 
 router.post("/addtasks", addDocument);
 router.post("/searchtasks", searchDocuments);
