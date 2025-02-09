@@ -12,7 +12,7 @@ export interface Document {
   status: statusType;
   embedding: number[];
   titleEmbedding: number[];
-  createdAt: string; // Added createdAt field
+  createdAt: string;
 }
 
 const documentSchema = new Schema<Document>({
