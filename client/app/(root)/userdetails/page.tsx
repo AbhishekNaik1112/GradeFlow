@@ -70,14 +70,14 @@ export default function SignupForm() {
           <h2 className="mb-8 text-2xl font-semibold ">Enter your details</h2>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex flex-col justify-center items-center">
               <FormField
                 control={form.control}
                 name="fullname"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Fullname" className="rounded-full border-gray-300 px-6 py-6" {...field} />
+                      <Input placeholder="Fullname" className="rounded-full border-gray-300 px-6 py-6 w-[30vw]" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -93,7 +93,7 @@ export default function SignupForm() {
                       <Input
                         placeholder="Email"
                         type="email"
-                        className="rounded-full border-gray-300 px-6 py-6"
+                        className="rounded-full border-gray-300 px-6 py-6 w-[30vw]"
                         {...field}
                       />
                     </FormControl>
@@ -102,7 +102,7 @@ export default function SignupForm() {
                 )}
               />
 
-              <Button type="submit" className="w-full rounded-full bg-black px-8 py-6 text-white hover:bg-gray-800">
+              <Button type="submit" className="rounded-full bg-black px-8 py-6 text-white hover:bg-gray-800  w-[12vw]">
                 Submit
               </Button>
             </form>
