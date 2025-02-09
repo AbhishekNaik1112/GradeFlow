@@ -3,8 +3,7 @@ import nodemailer from "nodemailer";
 import path from "path";
 import fs from "fs";
 import mongoose, { Document, Schema } from "mongoose";
-import { DocumentModel } from "../models/documents"; 
-
+import { DocumentModel } from "../models/documents";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -25,8 +24,8 @@ const addMinutes = (date: Date, minutes: number): Date => {
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "gradeflow4@gmail.com",
-    pass: "bape vwck kswi wcnj",
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -107,7 +106,7 @@ const sendReminderEmail = async (
 const mongoLink: string | undefined = process.env.MONGO_URI;
 if (!mongoLink) {
   console.error("MongoDB URI is not defined in the .env file.");
-  process.exit(1); 
+  process.exit(1);
 }
 
 mongoose
