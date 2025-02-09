@@ -25,6 +25,27 @@ export default function Sidebar() {
     return () => clearInterval(interval);
   }, []);
 
+  const toggleTaskCompletion = async (taskId: string, currentStatus: boolean) => {
+    const newStatus = !currentStatus;
+    updateTaskStatus(taskId, newStatus);
+    try {
+      const response = await fetch(`https://gradeflow.onrender.com/api/updatetasks/${taskId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: newStatus ? "complete" : "incomplete",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error updating task:", error);
+      updateTaskStatus(taskId, currentStatus); // Revert on error
+    }
+  };
   // Properly filtered tasks
   const filteredTasks = tasks
     .filter(task => {
