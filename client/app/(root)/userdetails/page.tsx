@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -36,6 +36,7 @@ export default function SignupForm() {
     setUsers(values)
     console.log("Stored Users:", [values.userEmail]);  
     localStorage.setItem("userEmail",values.userEmail );
+    localStorage.setItem("userlogged", JSON.stringify(true));
     router.push("/mainpage");
 
   }
