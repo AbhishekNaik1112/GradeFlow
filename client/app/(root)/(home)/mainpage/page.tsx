@@ -14,7 +14,7 @@ import { useTasks } from "../taskcontext";
 export default function TaskManager() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllTasks, setShowAllTasks] = useState(false);
-  const { tasks, updateTaskStatus ,setTasks} = useTasks();
+  const { tasks, updateTaskStatus, setTasks } = useTasks();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const router = useRouter();
@@ -36,6 +36,7 @@ export default function TaskManager() {
         }
 
         const data = await response.json();
+        console.log(data)
         // console.log(data)
         if (data && Array.isArray(data.documents)) {
           const userTasks = data.documents
@@ -45,6 +46,7 @@ export default function TaskManager() {
               completed: task.status === "complete",
             }));
 
+          console.log(userTasks)
           setTasks(userTasks);
         } else {
           console.error("Unexpected API response format:", data);
@@ -81,7 +83,7 @@ export default function TaskManager() {
       }
     } catch (error) {
       console.error("Error updating task:", error);
-      updateTaskStatus(taskId, currentStatus); // Revert on error
+      updateTaskStatus(taskId, currentStatus);
     }
   };
 
@@ -144,9 +146,10 @@ export default function TaskManager() {
                   .slice(0, showAllTasks ? tasks.length : 10)
                   .map((task) => (
                     <div
+                      onClick={() => router.push(`/viewTask?taskId=${task._id}`)}
                       key={task._id || task.id}
                       className={`rounded-lg p-4 bg-white hover:opacity-70 border hover:border-gray-500 cursor-pointer transition-all overflow-hidden ${task.completed ? "text-gray-500 border-white bg-slate-50" : "text-gray-900 border"
-                    }`}
+                        }`}
                     >
                       <div className="flex items-start gap-3">
                         <div className="checkbox-wrapper-12 scale-90">
